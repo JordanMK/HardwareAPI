@@ -1,0 +1,25 @@
+{
+  "name": "ti-eind-assignment-2324-project",
+  "version": "1.0.0",
+  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/5ykzvLV4)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives/issues"
+  },
+  "homepage": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "joi": "^17.12.2",
+    "mongoose": "^8.2.3"
+  }
+}
