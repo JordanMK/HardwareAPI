@@ -1,17 +1,17 @@
-export enum ComponentType {
+export enum IComponentType {
 	CPU = 'CPU',
 	GPU = 'GPU',
 	RAM = 'RAM',
 }
 
-export interface Component {
+export interface IComponent {
 	brand: string;
 	name: string;
-	componentType: ComponentType;
+	componentType: IComponentType;
 	images: string[];
 }
 
-export interface CPUComponent extends Component {
+export interface ICPUComponent extends IComponent {
 	family: string;
 	series: string;
 	generation: string;
@@ -42,7 +42,7 @@ export interface CPUComponent extends Component {
 	virtualisationSupport: boolean;
 }
 
-export interface GPUComponent extends Component {
+export interface IGPUComponent extends IComponent {
 	family: string;
 	series: string;
 	generation: string;
@@ -60,10 +60,10 @@ export interface GPUComponent extends Component {
 	virtualisationSupport: boolean;
 }
 
-export interface RAMComponent extends Component {
+export interface IRAMComponent extends IComponent {
 	series: string;
 	memoryType: string;
-	formFactor: 'DIMM' | 'SO-DIMM' | 'MicroDIMM' | 'Mini-DIMM';
+	formFactor: string;
 	eccSupport: boolean;
 	baseClock: number; // in Mhz
 	memorySpeed: number; // in MT/s
