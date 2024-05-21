@@ -50,7 +50,7 @@ export interface GPUComponent extends Component {
 	boostClock: number; // in MHz
 	vram: number; // in MB
 	memoryType: string;
-	memorySpeed: number; // Memory speed in Gbps
+	memorySpeed: number; // in MB
 	tdp: number;
 	busWidth: number; // in bits
 	pcieSupport: string;
