@@ -31,7 +31,7 @@ export interface ICPUComponent extends IComponent {
 		baseClock: number; // in MHz
 		boostClock: number; // in MHz
 	};
-	cache?: {
+	cache: {
 		l1: string; // in kb
 		l2: string; // in kb
 		l3: string; // in kb

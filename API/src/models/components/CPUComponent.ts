@@ -15,17 +15,47 @@ const CPUComponent = new Schema<ICPUComponent>({
 	socket: { type: String, required: true },
 	technologie: { type: Number, required: true },
 	integratedGraphics: {
-		name: { type: String },
-		brand: { type: String },
-		generation: { type: String },
-		architecture: { type: String },
-		baseClock: { type: Number },
-		boostClock: { type: Number },
+		name: {
+			type: String,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
+		brand: {
+			type: String,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
+		generation: {
+			type: String,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
+		architecture: {
+			type: String,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
+		baseClock: {
+			type: Number,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
+		boostClock: {
+			type: Number,
+			required: function () {
+				return this.integratedGraphics;
+			},
+		},
 	},
 	cache: {
-		l1: { type: String },
-		l2: { type: String },
-		l3: { type: String },
+		l1: { type: String, required: true },
+		l2: { type: String, required: true },
+		l3: { type: String, required: true },
 	},
 	hyperthreading: { type: Boolean, required: true },
 	pcieSupport: { type: String, required: true },
