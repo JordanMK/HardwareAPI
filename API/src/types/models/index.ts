@@ -8,6 +8,7 @@ export interface Component {
 	brand: string;
 	name: string;
 	componentType: ComponentType;
+	images: string[];
 }
 
 export interface CPUComponent extends Component {
