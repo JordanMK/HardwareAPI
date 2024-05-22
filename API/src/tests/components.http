@@ -1,4 +1,34 @@
-@baseUrl="http://localhost:3000/api/v1"
+@baseUrl=http://localhost:4000/api/v1
 
-// GET ALL
-get {{baseUrl}}/components
+// GET ALL COMPONENTS
+get {{baseUrl}}/components/
+
+###
+
+// GET COMPONENTS BY ID
+get {{baseUrl}}/components/664d93eaec455cbd93185c0c
+
+###
+
+// GET ALL RAM COMPONENTS
+get {{baseUrl}}/components/ram/
+
+###
+
+// POST RAM COMPONENT
+post {{baseUrl}}/components/ram
+Content-Type: application/json
+
+{
+  "brand": "Kingston",
+  "name": "Fury Beast",
+  "componentType": "RAM",
+  "series": "Fury Beast",
+  "memoryType": "DDR4",
+  "formFactor": "DIMM",
+  "eccSupport": false,
+  "baseClock": 3200,
+  "memorySpeed": 3200,
+  "casLatency": "CL16",
+  "voltage": 1.35
+}
