@@ -18,44 +18,86 @@ const swaggerDocument = {
 			name: 'API Support',
 			email: 'jordanmalekera.dev@proton.me',
 		},
-		hosts: 'localhost:4000',
-		basePath: '/api/v1/',
-		schemes: ['http'],
-		consumes: ['application/json'],
-		produces: ['application/json'],
-		tags: [],
-		securityDefinitions: {},
-		definitions: {
-			successResponse200: {
-				code: 200,
-				message: 'Success',
+	},
+	servers: [{ url: 'http://localhost:4000' }],
+	schemes: ['http'],
+	consumes: ['application/json'],
+	produces: ['application/json'],
+	tags: [],
+	securityDefinitions: {},
+	components: {
+		schemas: {
+			componentSchema: {
+				brand: 'string',
+				name: 'string',
+				componentType: {
+					enum: ['CPU', 'GPU', 'RAM'],
+				},
+				images: 'string[]',
 			},
-			errorResponse400: {
-				code: 400,
-				message:
-					'The request was malformed or invalid. Please check the request parameters.',
+		},
+		parameters: {
+			componentBrand: {
+				name: 'brand',
+				in: 'query',
+				required: false,
+				schema: {
+					type: 'string',
+				},
 			},
-			errorResponse401: {
-				code: 401,
-				message: 'Authentication failed or user lacks proper authorization.',
+			componentName: {
+				name: 'name',
+				in: 'query',
+				required: false,
+				schema: {
+					type: 'string',
+				},
 			},
-			errorResponse403: {
-				code: 403,
-				message: 'You do not have permission to access this resource.',
+			componentType: {
+				name: 'componentType',
+				in: 'query',
+				required: false,
+				schema: {
+					type: 'enum',
+					enum: ['CPU', 'GPU', 'RAM'],
+				},
 			},
-			errorResponse404: {
-				code: 404,
-				message: 'The requested resource could not be found on the server.',
-			},
-			errorResponse500: {
-				code: 500,
-				message:
-					'An unexpected error occurred on the server. Please try again later.',
-			},
+		},
+	},
+	definitions: {
+		successResponse200: {
+			code: 200,
+			message: 'Success',
+		},
+		errorResponse400: {
+			code: 400,
+			message:
+				'The request was malformed or invalid. Please check the request parameters.',
+		},
+		errorResponse401: {
+			code: 401,
+			message: 'Authentication failed or user lacks proper authorization.',
+		},
+		errorResponse403: {
+			code: 403,
+			message: 'You do not have permission to access this resource.',
+		},
+		errorResponse404: {
+			code: 404,
+			message: 'The requested resource could not be found on the server.',
+		},
+		errorResponse500: {
+			code: 500,
+			message:
+				'An unexpected error occurred on the server. Please try again later.',
 		},
 	},
 };
 
 const swaggerFile = './swagger.json';
 const apiRouteFile = ['../server.ts'];
-swaggerAutogen()(swaggerFile, apiRouteFile, swaggerDocument);
+swaggerAutogen({ openapi: '3.0.0' })(
+	swaggerFile,
+	apiRouteFile,
+	swaggerDocument
+);
