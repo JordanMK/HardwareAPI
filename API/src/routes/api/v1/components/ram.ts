@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import RAMComponentsController from '../../../../../controllers/components/RAMComponentsController';
+import RAMComponentsController from '../../../../controllers/components/RAMComponentsController';
 
 const router = express.Router();
 
