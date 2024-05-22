@@ -33,8 +33,6 @@ const createRAMComponent = async (
 	res: Response
 ): Promise<void> => {
 	try {
-		console.log(req.body.memorySpeed);
-		console.log(req.body);
 		const ramComponent: IRAMComponent = await RAMComponent.create(req.body);
 		res.status(201).json(ramComponent);
 	} catch (error: any) {

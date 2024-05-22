@@ -1,38 +1,42 @@
 {
-  "name": "ti-eind-assignment-2324-project",
-  "version": "1.0.0",
-  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/5ykzvLV4)",
-  "main": "src/server.js",
-  "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives/issues"
-  },
-  "homepage": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives#readme",
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.1",
-    "joi": "^17.12.2",
-    "mongoose": "^8.4.0",
-    "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^8.2.0",
-    "@types/express": "^4.17.21",
-    "@types/joi": "^17.2.3",
-    "@types/mongoose": "^5.11.97",
-    "@types/node": "^20.11.30",
-    "typescript": "^5.4.3"
-  }
+	"name": "ti-eind-assignment-2324-project",
+	"version": "1.0.0",
+	"description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/5ykzvLV4)",
+	"main": "src/server.js",
+	"scripts": {
+		"build": "npx tsc",
+		"start": "node dist/server.js",
+		"dev": "nodemon src/server.ts",
+		"swagger": "npx ts-node ./src/swagger/index.ts",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives/issues"
+	},
+	"homepage": "https://github.com/VivesMDima/ti-eind-assignment-2324-project-JordanMalekeraVives#readme",
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"express": "^4.19.1",
+		"joi": "^17.12.2",
+		"mongoose": "^8.4.0",
+		"nodemon": "^3.1.0",
+		"swagger-autogen": "^2.23.7",
+		"swagger-ui-express": "^5.0.0",
+		"ts-node": "^10.9.2"
+	},
+	"devDependencies": {
+		"@types/dotenv": "^8.2.0",
+		"@types/express": "^4.17.21",
+		"@types/joi": "^17.2.3",
+		"@types/mongoose": "^5.11.97",
+		"@types/node": "^20.11.30",
+		"@types/swagger-ui-express": "^4.1.6",
+		"typescript": "^5.4.3"
+	}
 }
