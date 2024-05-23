@@ -33,7 +33,12 @@ const swaggerDocument = {
 				componentType: {
 					enum: ['CPU', 'GPU', 'RAM'],
 				},
-				images: 'string[]',
+				images: {
+					type: 'array',
+					items: {
+						type: 'string',
+					},
+				},
 			},
 		},
 		parameters: {
@@ -61,6 +66,13 @@ const swaggerDocument = {
 					type: 'enum',
 					enum: ['CPU', 'GPU', 'RAM'],
 				},
+			},
+		},
+		securitySchemes: {
+			bearerAuth: {
+				type: 'http',
+				scheme: 'bearer',
+				in: 'header',
 			},
 		},
 	},
