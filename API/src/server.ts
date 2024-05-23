@@ -12,6 +12,8 @@ import errorHandler from './middleware/errorHandler';
 import cors from 'cors';
 import fs from 'fs';
 import corsOptions from './config/corsOptions';
+import { register } from './routes/api/register';
+import { auth } from './routes/api/auth';
 
 dotenv.config();
 connectDB();
@@ -45,18 +47,27 @@ app.use('/api/v1/components', components);
 // Swagger docs
 app.use('/api/v1/docs', serve, setup(swaggerJson));
 
+// Register
+app.use('/api/register', register);
+
+// Register
+app.use('/api/auth', auth);
+
 // Favicon
 app.get('/favicon.ico', (req: Request, res: Response) => {
+	// #swagger.ignore = true
 	res.sendFile(path.join(__dirname, '../public/img/favicon.ico'));
 });
 
 // Root
 app.get('/', (req: Request, res: Response) => {
+	// #swagger.ignore = true
 	res.send('Hello world');
 });
 
 // 404 Not found
 app.all('*', (req: Request, res: Response) => {
+	// #swagger.ignore = true
 	res.status(404).json({ message: '404 Not found' });
 });
 

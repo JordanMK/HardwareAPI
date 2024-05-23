@@ -1,13 +1,7 @@
-export enum IComponentType {
-	CPU = 'CPU',
-	GPU = 'GPU',
-	RAM = 'RAM',
-}
-
 export interface IComponent {
 	brand: string;
 	name: string;
-	componentType: IComponentType;
+	componentType: ComponentType;
 	images: string[];
 }
 
@@ -69,4 +63,22 @@ export interface IRAMComponent extends IComponent {
 	memorySpeed: number; // in MT/s
 	casLatency: string;
 	voltage: number; // in volts
+}
+
+export interface IUser {
+	username: string;
+	email: string;
+	password: string;
+	role: UserRole;
+}
+
+export enum ComponentType {
+	CPU = 'CPU',
+	GPU = 'GPU',
+	RAM = 'RAM',
+}
+
+export enum UserRole {
+	ADMIN = 'admin',
+	USER = 'user',
 }
