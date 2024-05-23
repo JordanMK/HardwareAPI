@@ -6,6 +6,7 @@ import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 	try {
+		// #swagger.tags = ['Users']
 		const users: IUser[] = await User.find();
 		res.status(200).json(users);
 	} catch (error: any) {
@@ -15,6 +16,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 
 const getUserById = async (req: Request, res: Response): Promise<void> => {
 	try {
+		// #swagger.tags = ['Users']
 		const user: IUser | null = await User.findById(req.params.id);
 		res.status(200).json(user);
 	} catch (error: any) {
@@ -23,6 +25,7 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 };
 
 const createUser = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Register']
 	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
@@ -60,6 +63,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Users']
 	try {
 		const user: IUser | null = await User.findByIdAndUpdate(
 			req.params.id,
@@ -75,6 +79,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const authUser = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Auth']
 	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
@@ -127,6 +132,7 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Refresh']
 	const cookies = req.cookies;
 	if (!cookies?.jwt) {
 		res.status(401).json({ message: 'No token supplied' });
@@ -172,6 +178,7 @@ const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
 
 const logoutUser = async (req: Request, res: Response): Promise<void> => {
 	// On client, delete the accessToken
+	// #swagger.tags = ['Logout']
 	const cookies = req.cookies;
 	if (!cookies?.jwt) {
 		res.status(204).json({ message: 'No content' });

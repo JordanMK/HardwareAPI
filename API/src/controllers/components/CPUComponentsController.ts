@@ -6,6 +6,7 @@ const getAllCPUComponents = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['CPU']
 	try {
 		const cpuComponents: ICPUComponent[] = await CPUComponent.find();
 		res.status(200).json(cpuComponents);
@@ -18,6 +19,7 @@ const getCPUComponentById = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['CPU']
 	try {
 		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
 			req.params.id
@@ -32,7 +34,12 @@ const createCPUComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['CPU']
 	/* #swagger.security = [{"bearerAuth": []}] */
+	/*  #swagger.requestBody = {
+            required: true,
+            schema: { $ref: "#/components/schemas/CPU" }
+    } */
 	try {
 		const cpuComponent: ICPUComponent = await CPUComponent.create(req.body);
 		res.status(201).json(cpuComponent);
@@ -46,6 +53,7 @@ const updateCPUComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['CPU']
 	/* #swagger.security = [{"bearerAuth": []}] */
 	if (!req.params.id) {
 		res.status(400).json({ message: 'No ID provided' });
@@ -65,6 +73,31 @@ const updateCPUComponent = async (
 			res.status(200).json(updatedCPUComponent);
 		}
 	} catch (error: any) {}
+};
+
+const deleteCPUComponent = async (
+	req: Request,
+	res: Response
+): Promise<void> => {
+	// #swagger.tags = ['CPU']
+	/* #swagger.security = [{"bearerAuth": []}] */
+	if (!req.params.id) {
+		res.status(400).json({ message: 'No ID provided' });
+		return;
+	}
+	try {
+		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
+			req.params.id
+		);
+		if (!cpuComponent) {
+			res.status(404).json({ message: 'CPU Component not found' });
+		} else {
+			await CPUComponent.findByIdAndDelete(req.params.id);
+			res.status(200).json({ message: 'CPU Component deleted' });
+		}
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
 };
 
 export default {

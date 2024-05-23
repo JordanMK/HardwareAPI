@@ -6,6 +6,7 @@ const getAllGPUComponents = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['GPU']
 	try {
 		const gpuComponents: IGPUComponent[] = await GPUComponent.find();
 		res.status(200).json(gpuComponents);
@@ -18,6 +19,7 @@ const getGPUComponentById = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['GPU']
 	try {
 		const gpuComponent: IGPUComponent | null = await GPUComponent.findById(
 			req.params.id
@@ -32,6 +34,7 @@ const createGPUComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['GPU']
 	/* #swagger.security = [{"bearerAuth": []}] */
 	try {
 		const gpuComponent: IGPUComponent = await GPUComponent.create(req.body);
@@ -46,6 +49,7 @@ const updateGPUComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['GPU']
 	/* #swagger.security = [{"bearerAuth": []}] */
 	if (!req.params.id) {
 		res.status(400).json({ message: 'No ID provided' });

@@ -3,6 +3,7 @@ import Component from '../../models/components/Component';
 import { IComponent } from '../../types/models';
 
 const getAllComponents = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Components']
 	/*  #swagger.parameters['$ref'] = ['#/components/parameters/componentBrand', '#/components/parameters/componentName', '#/components/parameters/componentType'] */
 	try {
 		const components: IComponent[] = await Component.find(req.query);
@@ -13,6 +14,7 @@ const getAllComponents = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getComponentById = async (req: Request, res: Response): Promise<void> => {
+	// #swagger.tags = ['Components']
 	try {
 		const component: IComponent | null = await Component.findById(
 			req.params.id

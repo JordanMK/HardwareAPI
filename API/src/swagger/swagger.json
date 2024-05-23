@@ -18,6 +18,9 @@
   "paths": {
     "/api/v1/components/{id}": {
       "get": {
+        "tags": [
+          "Components"
+        ],
         "description": "",
         "parameters": [
           {
@@ -41,6 +44,9 @@
     },
     "/api/v1/components/": {
       "get": {
+        "tags": [
+          "Components"
+        ],
         "description": "",
         "parameters": [
           {
@@ -65,6 +71,9 @@
     },
     "/api/v1/components/cpu/{id}": {
       "get": {
+        "tags": [
+          "CPU"
+        ],
         "description": "",
         "parameters": [
           {
@@ -86,6 +95,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "CPU"
+        ],
         "description": "",
         "parameters": [
           {
@@ -117,6 +129,9 @@
     },
     "/api/v1/components/cpu/": {
       "get": {
+        "tags": [
+          "CPU"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -128,6 +143,9 @@
         }
       },
       "post": {
+        "tags": [
+          "CPU"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -141,11 +159,29 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CPU"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CPU"
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/components/gpu/{id}": {
       "get": {
+        "tags": [
+          "GPU"
+        ],
         "description": "",
         "parameters": [
           {
@@ -167,6 +203,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "GPU"
+        ],
         "description": "",
         "parameters": [
           {
@@ -201,6 +240,9 @@
     },
     "/api/v1/components/gpu/": {
       "get": {
+        "tags": [
+          "GPU"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -212,6 +254,9 @@
         }
       },
       "post": {
+        "tags": [
+          "GPU"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -230,6 +275,9 @@
     },
     "/api/v1/components/ram/{id}": {
       "get": {
+        "tags": [
+          "RAM"
+        ],
         "description": "",
         "parameters": [
           {
@@ -251,6 +299,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "RAM"
+        ],
         "description": "",
         "parameters": [
           {
@@ -285,6 +336,9 @@
     },
     "/api/v1/components/ram/": {
       "get": {
+        "tags": [
+          "RAM"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -296,6 +350,9 @@
         }
       },
       "post": {
+        "tags": [
+          "RAM"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -314,6 +371,9 @@
     },
     "/api/register/": {
       "post": {
+        "tags": [
+          "Register"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -333,6 +393,9 @@
     },
     "/api/auth/": {
       "post": {
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -355,6 +418,9 @@
     },
     "/api/refresh/": {
       "get": {
+        "tags": [
+          "Refresh"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -374,6 +440,9 @@
     },
     "/api/logout/": {
       "get": {
+        "tags": [
+          "Logout"
+        ],
         "description": "",
         "responses": {
           "204": {
@@ -388,7 +457,205 @@
   },
   "components": {
     "schemas": {
-      "componentSchema": {
+      "Component": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "componentType": {
+            "type": "object",
+            "properties": {
+              "enum": {
+                "type": "array",
+                "example": [
+                  "CPU",
+                  "GPU",
+                  "RAM"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "example": [
+              "string"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "xml": {
+          "name": "Component"
+        }
+      },
+      "CPU": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "componentType": {
+            "type": "object",
+            "properties": {
+              "enum": {
+                "type": "array",
+                "example": [
+                  "CPU",
+                  "GPU",
+                  "RAM"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "example": [
+              "string"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "family": {
+            "type": "string",
+            "example": "string"
+          },
+          "series": {
+            "type": "string",
+            "example": "string"
+          },
+          "generation": {
+            "type": "string",
+            "example": "string"
+          },
+          "architecture": {
+            "type": "string",
+            "example": "string"
+          },
+          "cores": {
+            "type": "number",
+            "example": 0
+          },
+          "threads": {
+            "type": "number",
+            "example": 0
+          },
+          "baseClock": {
+            "type": "number",
+            "example": 0
+          },
+          "boostClock": {
+            "type": "number",
+            "example": 0
+          },
+          "tdp": {
+            "type": "number",
+            "example": 0
+          },
+          "socket": {
+            "type": "string",
+            "example": "string"
+          },
+          "technologie": {
+            "type": "number",
+            "example": 0
+          },
+          "integratedGraphics": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "string"
+              },
+              "brand": {
+                "type": "string",
+                "example": "string"
+              },
+              "generation": {
+                "type": "string",
+                "example": "string"
+              },
+              "architecture": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              },
+              "baseClock": {
+                "type": "number",
+                "example": 0
+              },
+              "boostClock": {
+                "type": "number",
+                "example": 0
+              }
+            }
+          },
+          "cache": {
+            "type": "object",
+            "properties": {
+              "l1": {
+                "type": "string",
+                "example": "string"
+              },
+              "l2": {
+                "type": "string",
+                "example": "string"
+              },
+              "l3": {
+                "type": "string",
+                "example": "string"
+              }
+            }
+          },
+          "hyperthreading": {
+            "type": "boolean",
+            "example": true
+          },
+          "pcieSupport": {
+            "type": "string",
+            "example": "string"
+          },
+          "maxPcieLanes": {
+            "type": "number",
+            "example": 0
+          },
+          "virtualisationSupport": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "boolean"
+              }
+            }
+          }
+        },
+        "xml": {
+          "name": "CPU"
+        }
+      },
+      "GPU": {
         "type": "object",
         "properties": {
           "brand": {
@@ -432,7 +699,188 @@
                 }
               }
             }
+          },
+          "family": {
+            "type": "string",
+            "example": "string"
+          },
+          "series": {
+            "type": "string",
+            "example": "string"
+          },
+          "generation": {
+            "type": "string",
+            "example": "string"
+          },
+          "architecture": {
+            "type": "string",
+            "example": "string"
+          },
+          "cores": {
+            "type": "string",
+            "example": "integer"
+          },
+          "threads": {
+            "type": "string",
+            "example": "integer"
+          },
+          "baseClock": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "number"
+              },
+              "format": {
+                "type": "string",
+                "example": "float"
+              }
+            }
+          },
+          "boostClock": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "number"
+              },
+              "format": {
+                "type": "string",
+                "example": "float"
+              }
+            }
+          },
+          "tdp": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "number"
+              },
+              "format": {
+                "type": "string",
+                "example": "float"
+              }
+            }
+          },
+          "socket": {
+            "type": "string",
+            "example": "string"
+          },
+          "technologie": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "number"
+              },
+              "format": {
+                "type": "string",
+                "example": "float"
+              }
+            }
+          },
+          "integratedGraphics": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "object"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "generation": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "architecture": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "baseClock": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "example": "number"
+                      },
+                      "format": {
+                        "type": "string",
+                        "example": "float"
+                      }
+                    }
+                  },
+                  "boostClock": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "example": "number"
+                      },
+                      "format": {
+                        "type": "string",
+                        "example": "float"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "cache": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "object"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "l1": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "l2": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "l3": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "hyperthreading": {
+            "type": "string",
+            "example": "boolean"
+          },
+          "pcieSupport": {
+            "type": "string",
+            "example": "string"
+          },
+          "maxPcieLanes": {
+            "type": "string",
+            "example": "integer"
+          },
+          "virtualisationSupport": {
+            "type": "string",
+            "example": "boolean"
           }
+        },
+        "xml": {
+          "name": "GPU"
         }
       },
       "successResponse200": {
@@ -446,6 +894,9 @@
             "type": "string",
             "example": "Success"
           }
+        },
+        "xml": {
+          "name": "successResponse200"
         }
       },
       "errorResponse400": {
@@ -459,6 +910,9 @@
             "type": "string",
             "example": "The request was malformed or invalid. Please check the request parameters."
           }
+        },
+        "xml": {
+          "name": "errorResponse400"
         }
       },
       "errorResponse401": {
@@ -472,6 +926,9 @@
             "type": "string",
             "example": "Authentication failed or user lacks proper authorization."
           }
+        },
+        "xml": {
+          "name": "errorResponse401"
         }
       },
       "errorResponse403": {
@@ -485,6 +942,9 @@
             "type": "string",
             "example": "You do not have permission to access this resource."
           }
+        },
+        "xml": {
+          "name": "errorResponse403"
         }
       },
       "errorResponse404": {
@@ -498,6 +958,9 @@
             "type": "string",
             "example": "The requested resource could not be found on the server."
           }
+        },
+        "xml": {
+          "name": "errorResponse404"
         }
       },
       "errorResponse500": {
@@ -511,37 +974,228 @@
             "type": "string",
             "example": "An unexpected error occurred on the server. Please try again later."
           }
+        },
+        "xml": {
+          "name": "errorResponse500"
         }
       }
     },
     "parameters": {
-      "componentBrand": {
-        "name": "brand",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string"
+      "component": {
+        "brand": {
+          "name": "brand",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "name": "name",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "componentType": {
+          "name": "componentType",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "enum",
+            "enum": [
+              "CPU",
+              "GPU",
+              "RAM"
+            ]
+          }
+        },
+        "images": {
+          "name": "images",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
-      "componentName": {
-        "name": "name",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "componentType": {
-        "name": "componentType",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "enum",
-          "enum": [
-            "CPU",
-            "GPU",
-            "RAM"
-          ]
+      "cpu": {
+        "family": {
+          "name": "family",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "series": {
+          "name": "series",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "generation": {
+          "name": "generation",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "architecture": {
+          "name": "architecture",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "cores": {
+          "name": "cores",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "threads": {
+          "name": "threads",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "baseClock": {
+          "name": "baseClock",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "boostClock": {
+          "name": "boostClock",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "tdp": {
+          "name": "tdp",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "socket": {
+          "name": "socket",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "technologie": {
+          "name": "technologie",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "integratedGraphics": {
+          "name": "integratedGraphics",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "brand": {
+                "type": "string"
+              },
+              "generation": {
+                "type": "string"
+              },
+              "architecture": {
+                "type": "string"
+              },
+              "baseClock": {
+                "type": "number",
+                "format": "float"
+              },
+              "boostClock": {
+                "type": "number",
+                "format": "float"
+              }
+            }
+          }
+        },
+        "cache": {
+          "name": "cache",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "l1": {
+                "type": "string"
+              },
+              "l2": {
+                "type": "string"
+              },
+              "l3": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "hyperthreading": {
+          "name": "hyperthreading",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        "pcieSupport": {
+          "name": "pcieSupport",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "maxPcieLanes": {
+          "name": "maxPcieLanes",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "virtualisationSupport": {
+          "name": "virtualisationSupport",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
         }
       }
     },

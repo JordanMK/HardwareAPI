@@ -27,7 +27,51 @@ const swaggerDocument = {
 	securityDefinitions: {},
 	components: {
 		schemas: {
-			componentSchema: {
+			Component: {
+				brand: 'string',
+				name: 'string',
+				componentType: {
+					enum: ['CPU', 'GPU', 'RAM'],
+				},
+				images: ['string'],
+			},
+			CPU: {
+				brand: 'string',
+				name: 'string',
+				componentType: {
+					enum: ['CPU', 'GPU', 'RAM'],
+				},
+				images: ['string'],
+				family: 'string',
+				series: 'string',
+				generation: 'string',
+				architecture: 'string',
+				cores: 0,
+				threads: 0,
+				baseClock: 0.0,
+				boostClock: 0.0,
+				tdp: 0.0,
+				socket: 'string',
+				technologie: 0.0,
+				integratedGraphics: {
+					name: 'string',
+					brand: 'string',
+					generation: 'string',
+					architecture: { type: 'string' },
+					baseClock: 0.0,
+					boostClock: 0.0,
+				},
+				cache: {
+					l1: 'string',
+					l2: 'string',
+					l3: 'string',
+				},
+				hyperthreading: true,
+				pcieSupport: 'string',
+				maxPcieLanes: 0,
+				virtualisationSupport: { type: 'boolean' },
+			},
+			GPU: {
 				brand: 'string',
 				name: 'string',
 				componentType: {
@@ -39,32 +83,254 @@ const swaggerDocument = {
 						type: 'string',
 					},
 				},
+				family: 'string',
+				series: 'string',
+				generation: 'string',
+				architecture: 'string',
+				cores: 'integer',
+				threads: 'integer',
+				baseClock: { type: 'number', format: 'float' },
+				boostClock: { type: 'number', format: 'float' },
+				tdp: { type: 'number', format: 'float' },
+				socket: 'string',
+				technologie: { type: 'number', format: 'float' },
+				integratedGraphics: {
+					type: 'object',
+					properties: {
+						name: 'string',
+						brand: 'string',
+						generation: 'string',
+						architecture: 'string',
+						baseClock: { type: 'number', format: 'float' },
+						boostClock: { type: 'number', format: 'float' },
+					},
+				},
+				cache: {
+					type: 'object',
+					properties: {
+						l1: 'string',
+						l2: 'string',
+						l3: 'string',
+					},
+				},
+				hyperthreading: 'boolean',
+				pcieSupport: 'string',
+				maxPcieLanes: 'integer',
+				virtualisationSupport: 'boolean',
 			},
 		},
 		parameters: {
-			componentBrand: {
-				name: 'brand',
-				in: 'query',
-				required: false,
-				schema: {
-					type: 'string',
+			component: {
+				brand: {
+					name: 'brand',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				name: {
+					name: 'name',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				componentType: {
+					name: 'componentType',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'enum',
+						enum: ['CPU', 'GPU', 'RAM'],
+					},
+				},
+				images: {
+					name: 'images',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'array',
+						items: {
+							type: 'string',
+						},
+					},
 				},
 			},
-			componentName: {
-				name: 'name',
-				in: 'query',
-				required: false,
-				schema: {
-					type: 'string',
+			cpu: {
+				family: {
+					name: 'family',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
 				},
-			},
-			componentType: {
-				name: 'componentType',
-				in: 'query',
-				required: false,
-				schema: {
-					type: 'enum',
-					enum: ['CPU', 'GPU', 'RAM'],
+				series: {
+					name: 'series',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				generation: {
+					name: 'generation',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				architecture: {
+					name: 'architecture',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				cores: {
+					name: 'cores',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'integer',
+					},
+				},
+				threads: {
+					name: 'threads',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'integer',
+					},
+				},
+				baseClock: {
+					name: 'baseClock',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'number',
+						format: 'float',
+					},
+				},
+				boostClock: {
+					name: 'boostClock',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'number',
+						format: 'float',
+					},
+				},
+				tdp: {
+					name: 'tdp',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'number',
+						format: 'float',
+					},
+				},
+				socket: {
+					name: 'socket',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				technologie: {
+					name: 'technologie',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'number',
+						format: 'float',
+					},
+				},
+				integratedGraphics: {
+					name: 'integratedGraphics',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'object',
+						properties: {
+							name: {
+								type: 'string',
+							},
+							brand: {
+								type: 'string',
+							},
+							generation: {
+								type: 'string',
+							},
+							architecture: {
+								type: 'string',
+							},
+							baseClock: {
+								type: 'number',
+								format: 'float',
+							},
+							boostClock: {
+								type: 'number',
+								format: 'float',
+							},
+						},
+					},
+				},
+				cache: {
+					name: 'cache',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'object',
+						properties: {
+							l1: {
+								type: 'string',
+							},
+							l2: {
+								type: 'string',
+							},
+							l3: {
+								type: 'string',
+							},
+						},
+					},
+				},
+				hyperthreading: {
+					name: 'hyperthreading',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'boolean',
+					},
+				},
+				pcieSupport: {
+					name: 'pcieSupport',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'string',
+					},
+				},
+				maxPcieLanes: {
+					name: 'maxPcieLanes',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'integer',
+					},
+				},
+				virtualisationSupport: {
+					name: 'virtualisationSupport',
+					in: 'query',
+					required: false,
+					schema: {
+						type: 'boolean',
+					},
 				},
 			},
 		},

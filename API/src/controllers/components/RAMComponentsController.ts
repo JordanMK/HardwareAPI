@@ -6,6 +6,7 @@ const getAllRAMComponents = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['RAM']
 	try {
 		console.log(req.query);
 		const query: Partial<IRAMComponent> = req.query;
@@ -20,6 +21,7 @@ const getRAMComponentById = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['RAM']
 	try {
 		console.log(req.params);
 		const ramComponent: IRAMComponent | null = await RAMComponent.findById(
@@ -35,6 +37,7 @@ const createRAMComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['RAM']
 	/* #swagger.security = [{"bearerAuth": []}] */
 	try {
 		const ramComponent: IRAMComponent = await RAMComponent.create(req.body);
@@ -49,6 +52,7 @@ const updateRAMComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
+	// #swagger.tags = ['RAM']
 	/* #swagger.security = [{"bearerAuth": []}] */
 	if (!req.params.id) {
 		res.status(400).json({ message: 'No ID provided' });
