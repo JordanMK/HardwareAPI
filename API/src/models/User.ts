@@ -1,7 +1,10 @@
-import mongoose, { Schema } from 'mongoose';
-import { IUser } from '../types/models';
+import mongoose, { Model, Schema } from 'mongoose';
+import { IUser, IUserMethods } from '../types/models';
+import jwt from 'jsonwebtoken';
 
-const userSchema = new Schema<IUser>({
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 	username: {
 		type: String,
 		uique: true,
@@ -27,4 +30,16 @@ const userSchema = new Schema<IUser>({
 	},
 });
 
-export default mongoose.model('User', userSchema);
+userSchema.methods.generateAccessToken = function () {
+	return jwt.sign({ id: this.id }, process.env.ACCESS_TOKEN_SECRET as string, {
+		expiresIn: '1m',
+	});
+};
+
+userSchema.methods.generateRefreshToken = function () {
+	return jwt.sign({ id: this.id }, process.env.REFRESH_TOKEN_SECRET as string, {
+		expiresIn: '1m',
+	});
+};
+
+export default mongoose.model<IUser, UserModel>('User', userSchema);

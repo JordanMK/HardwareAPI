@@ -13,4 +13,4 @@ const RAMComponent = new Schema<IRAMComponent>({
 	voltage: { type: Number, required: true },
 });
 
-export default Component.discriminator('RAM', RAMComponent);
+export default Component.discriminator<IRAMComponent>('RAM', RAMComponent);

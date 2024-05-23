@@ -20,4 +20,4 @@ const GPUComponent = new Schema<IGPUComponent>({
 	virtualisationSupport: { type: Boolean, required: true },
 });
 
-export default Component.discriminator('GPU', GPUComponent);
+export default Component.discriminator<IGPUComponent>('GPU', GPUComponent);

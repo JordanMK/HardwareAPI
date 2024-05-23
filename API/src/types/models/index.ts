@@ -66,10 +66,16 @@ export interface IRAMComponent extends IComponent {
 }
 
 export interface IUser {
+	id: string;
 	username: string;
 	email: string;
 	password: string;
 	role: UserRole;
+}
+
+export interface IUserMethods {
+	generateAccessToken: () => string;
+	generateRefreshToken: () => string;
 }
 
 export enum ComponentType {

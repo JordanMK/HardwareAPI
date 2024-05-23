@@ -63,4 +63,4 @@ const CPUComponent = new Schema<ICPUComponent>({
 	virtualisationSupport: { type: Boolean, required: true },
 });
 
-export default Component.discriminator('CPU', CPUComponent);
+export default Component.discriminator<ICPUComponent>('CPU', CPUComponent);

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IUser, UserRole } from '../types/models';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 	try {
@@ -22,7 +23,7 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 };
 
 const createUser = async (req: Request, res: Response): Promise<void> => {
-	const reqBody: IUser = req.body;
+	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
 		return;
@@ -40,7 +41,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 			reqBody.password,
 			await bcrypt.genSalt(10)
 		);
-		const newUser: IUser = {
+		const newUser: Pick<IUser, 'username' | 'email' | 'password' | 'role'> = {
 			username: reqBody.username,
 			email: reqBody.email,
 			password: hashedPwd,
@@ -74,28 +75,41 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const authUser = async (req: Request, res: Response): Promise<void> => {
-	const reqBody: IUser = req.body;
+	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
 		return;
 	}
 	try {
-		const user: IUser | null = await User.findOne({
+		const user = await User.findOne({
 			username: reqBody.username,
 		});
+
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
 			return;
 		}
+
 		const isMatch: boolean = await bcrypt.compare(
 			reqBody.password,
 			user.password
 		);
-		if (isMatch) {
-			res.status(200).json({ success: `User ${user.username} is logged in!` });
-		} else {
+
+		if (!isMatch) {
 			res.status(401).json({ message: 'Incorrect password' });
+			return;
 		}
+
+		const accesToken = user.generateAccessToken();
+		const refreshToken = user.generateRefreshToken();
+		res
+			.status(200)
+			.header('x-auth-token', accesToken)
+			.cookie('jwt', refreshToken, {
+				httpOnly: true,
+				maxAge: 24 * 60 * 60 * 1000,
+			})
+			.json({ success: `User ${user.username} is logged in!` });
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}

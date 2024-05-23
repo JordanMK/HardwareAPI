@@ -20,4 +20,4 @@ const componentSchema = new Schema<IComponent>({
 	},
 });
 
-export default mongoose.model('Component', componentSchema);
+export default mongoose.model<IComponent>('Component', componentSchema);
