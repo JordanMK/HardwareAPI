@@ -7,7 +7,9 @@ const getAllRAMComponents = async (
 	res: Response
 ): Promise<void> => {
 	try {
-		const ramComponents: IRAMComponent[] = await RAMComponent.find();
+		console.log(req.query);
+		const query: Partial<IRAMComponent> = req.query;
+		const ramComponents: IRAMComponent[] = await RAMComponent.find(query);
 		res.status(200).json(ramComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -19,6 +21,7 @@ const getRAMComponentById = async (
 	res: Response
 ): Promise<void> => {
 	try {
+		console.log(req.params);
 		const ramComponent: IRAMComponent | null = await RAMComponent.findById(
 			req.params.id
 		);
