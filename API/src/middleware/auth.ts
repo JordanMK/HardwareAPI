@@ -7,13 +7,14 @@ import jwt, {
 
 interface IRequest extends Request {
 	id?: string;
+	role?: string;
 }
 const auth = (req: IRequest, res: Response, next: NextFunction) => {
-	const authHeader = req.headers['authorization'];
+	const authHeader = req.headers.authorization;
 	if (!authHeader) {
 		return res.status(401).json({ message: 'No token provided' });
 	}
-	if (authHeader.split(' ')[0] !== 'Bearer') {
+	if (!authHeader.startsWith('Bearer ')) {
 		return res.status(401).json({ message: 'Invalid token' });
 	}
 	if (authHeader.split(' ')[1] == null) {
@@ -34,6 +35,7 @@ const auth = (req: IRequest, res: Response, next: NextFunction) => {
 				return;
 			}
 			req.id = (decoded as JwtPayload).id;
+			req.role = (decoded as JwtPayload).role;
 			next();
 		}
 	);

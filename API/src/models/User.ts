@@ -34,15 +34,23 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 });
 
 userSchema.methods.generateAccessToken = function () {
-	return jwt.sign({ id: this.id }, process.env.ACCESS_TOKEN_SECRET as string, {
-		expiresIn: '1m',
-	});
+	return jwt.sign(
+		{ id: this.id, role: this.role },
+		process.env.ACCESS_TOKEN_SECRET as string,
+		{
+			expiresIn: '1m',
+		}
+	);
 };
 
 userSchema.methods.generateRefreshToken = function () {
-	return jwt.sign({ id: this.id }, process.env.REFRESH_TOKEN_SECRET as string, {
-		expiresIn: '1m',
-	});
+	return jwt.sign(
+		{ id: this.id, role: this.role },
+		process.env.REFRESH_TOKEN_SECRET as string,
+		{
+			expiresIn: '1m',
+		}
+	);
 };
 
 export default mongoose.model<IUser, UserModel>('User', userSchema);
