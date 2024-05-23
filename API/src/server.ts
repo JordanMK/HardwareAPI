@@ -14,6 +14,9 @@ import fs from 'fs';
 import corsOptions from './config/corsOptions';
 import { register } from './routes/api/register';
 import { auth } from './routes/api/auth';
+import cookieParser = require('cookie-parser');
+import { refresh } from './routes/api/refresh';
+import { logout } from './routes/api/logout';
 
 dotenv.config();
 connectDB();
@@ -27,6 +30,9 @@ app.use(express.urlencoded({ extended: false }));
 // Json data
 app.use(express.json());
 app.use(bodyParser.json());
+
+// Cookies (refresh)
+app.use(cookieParser());
 
 // Static files
 app.use(express.static(path.join(__dirname, '../public')));
@@ -50,8 +56,14 @@ app.use('/api/v1/docs', serve, setup(swaggerJson));
 // Register
 app.use('/api/register', register);
 
-// Register
+// Authenticate
 app.use('/api/auth', auth);
+
+// Refresh
+app.use('/api/refresh', refresh);
+
+// Logout
+app.use('/api/logout', logout);
 
 // Favicon
 app.get('/favicon.ico', (req: Request, res: Response) => {

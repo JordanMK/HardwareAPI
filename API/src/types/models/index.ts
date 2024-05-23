@@ -71,6 +71,7 @@ export interface IUser {
 	email: string;
 	password: string;
 	role: UserRole;
+	refreshToken?: string;
 }
 
 export interface IUserMethods {

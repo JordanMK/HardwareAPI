@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IUser, UserRole } from '../types/models';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 	try {
@@ -102,6 +102,17 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 
 		const accesToken = user.generateAccessToken();
 		const refreshToken = user.generateRefreshToken();
+
+		const userWithToken = await User.findByIdAndUpdate(user.id, {
+			refreshToken: refreshToken,
+		});
+		if (!userWithToken) {
+			res
+				.status(500)
+				.json({ message: 'An unexpected error occurred on the server.' });
+			return;
+		}
+
 		res
 			.status(200)
 			.header('x-auth-token', accesToken)
@@ -115,4 +126,84 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 	}
 };
 
-export default { getAllUsers, getUserById, createUser, authUser };
+const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
+	const cookies = req.cookies;
+	if (!cookies?.jwt) {
+		res.status(401).json({ message: 'No token supplied' });
+		return;
+	}
+	try {
+		const refreshToken = cookies.jwt;
+		const user = await User.findOne({
+			refreshToken: refreshToken,
+		});
+
+		if (!user) {
+			res.status(403).json({ message: `No user found` });
+			return;
+		}
+
+		jwt.verify(
+			refreshToken,
+			process.env.REFRESH_TOKEN_SECRET as string,
+			{},
+			(err, decoded) => {
+				if (err || user.id !== (decoded as JwtPayload).id) {
+					if (err instanceof TokenExpiredError) {
+						res.status(401).json({ message: 'Used Token expired' });
+						return;
+					} else {
+						res.status(401).json({ message: 'Authentication failed' });
+						return;
+					}
+				}
+				const accesToken = user.generateAccessToken();
+				console.log('Success');
+				res
+					.status(200)
+					.header('x-auth-token', accesToken)
+					.json({ message: 'Success' });
+			}
+		);
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
+const logoutUser = async (req: Request, res: Response): Promise<void> => {
+	// On client, delete the accessToken
+	const cookies = req.cookies;
+	if (!cookies?.jwt) {
+		res.status(204).json({ message: 'No content' });
+		return;
+	}
+
+	try {
+		const refreshToken = cookies.jwt;
+		const user = await User.findOne({
+			refreshToken: refreshToken,
+		});
+
+		if (!user) {
+			res.clearCookie('jwt', { httpOnly: true });
+			res.status(204).json({ message: `No content` });
+			return;
+		}
+
+		const updatedUser = await User.findByIdAndUpdate(user.id, {
+			refreshToken: '',
+		});
+		res.clearCookie('jwt', { httpOnly: true }); // secure: true on https
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
+export default {
+	getAllUsers,
+	getUserById,
+	createUser,
+	authUser,
+	refreshAuthUser,
+	logoutUser,
+};

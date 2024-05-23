@@ -28,6 +28,9 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 		enum: ['user', 'admin'],
 		required: true,
 	},
+	refreshToken: {
+		type: String,
+	},
 });
 
 userSchema.methods.generateAccessToken = function () {

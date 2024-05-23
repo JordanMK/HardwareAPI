@@ -1,5 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
-import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
+import jwt, {
+	JsonWebTokenError,
+	JwtPayload,
+	TokenExpiredError,
+} from 'jsonwebtoken';
 
 interface IRequest extends Request {
 	id?: string;
@@ -22,10 +26,12 @@ const auth = (req: IRequest, res: Response, next: NextFunction) => {
 		process.env.ACCESS_TOKEN_SECRET as string,
 		{},
 		(err, decoded) => {
-			if (err) {
-				return res
-					.status(403)
-					.json({ message: 'Failed to authenticate token' });
+			if (err instanceof TokenExpiredError) {
+				res.status(401).json({ message: 'Used Token expired' });
+				return;
+			} else if (err) {
+				res.status(401).json({ message: 'Authentication failed' });
+				return;
 			}
 			req.id = (decoded as JwtPayload).id;
 			next();
