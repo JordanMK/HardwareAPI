@@ -3,6 +3,7 @@ import { IUser, UserRole } from '../types/models';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
+import { isValidObjectId } from 'mongoose';
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 	try {
@@ -17,7 +18,15 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 const getUserById = async (req: Request, res: Response): Promise<void> => {
 	try {
 		// #swagger.tags = ['Users']
+		if (!isValidObjectId(req.params.id)) {
+			res.status(400).json({ message: 'Invalid ID' });
+			return;
+		}
 		const user: IUser | null = await User.findById(req.params.id);
+		if (!user) {
+			res.status(404).json({ message: 'User not found' });
+			return;
+		}
 		res.status(200).json(user);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -51,10 +60,9 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 			role: UserRole.USER,
 		};
 		const user: IUser = await User.create(newUser);
-		const showUser: Pick<IUser, 'username' | 'email' | 'password'> = {
+		const showUser: Pick<IUser, 'username' | 'email'> = {
 			username: user.username,
 			email: user.email,
-			password: user.password,
 		};
 		res.status(201).json(showUser);
 	} catch (error: any) {

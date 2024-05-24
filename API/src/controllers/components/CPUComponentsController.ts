@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import CPUComponent from '../../models/components/CPUComponent';
-import { ICPUComponent } from '../../types/models';
+import { ComponentType, ICPUComponent } from '../../types/models';
+import Joi from 'joi';
+import { isValidObjectId } from 'mongoose';
 
 const getAllCPUComponents = async (
 	req: Request,
@@ -21,9 +23,17 @@ const getCPUComponentById = async (
 ): Promise<void> => {
 	// #swagger.tags = ['CPU']
 	try {
+		if (!isValidObjectId(req.params.id)) {
+			res.status(400).json({ message: 'Invalid ID' });
+			return;
+		}
 		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
 			req.params.id
 		);
+		if (!cpuComponent) {
+			res.status(404).json({ message: 'Component not found' });
+			return;
+		}
 		res.status(200).json(cpuComponent);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -40,6 +50,11 @@ const createCPUComponent = async (
             required: true,
             schema: { $ref: "#/components/schemas/CPU" }
     } */
+	const { error } = validateCPUComponent(req.body);
+	if (error) {
+		res.status(400).json({ message: error.details[0].message });
+		return;
+	}
 	try {
 		const cpuComponent: ICPUComponent = await CPUComponent.create(req.body);
 		res.status(201).json(cpuComponent);
@@ -98,6 +113,43 @@ const deleteCPUComponent = async (
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
+};
+
+const validateCPUComponent = (cpu: ICPUComponent) => {
+	const schema = Joi.object<Omit<ICPUComponent, 'componentType'>>({
+		brand: Joi.string().required(),
+		name: Joi.string().required(),
+		images: Joi.array(),
+		family: Joi.string().required(),
+		series: Joi.string().required(),
+		generation: Joi.string().required(),
+		architecture: Joi.string().required(),
+		cores: Joi.number().required(),
+		threads: Joi.number().required(),
+		baseClock: Joi.number().required(),
+		boostClock: Joi.number().required(),
+		tdp: Joi.number().required(),
+		socket: Joi.string().required(),
+		technology: Joi.number().required(),
+		integratedGraphics: Joi.object({
+			name: Joi.string().required(),
+			brand: Joi.string().required(),
+			generation: Joi.string().required(),
+			architecture: Joi.string().required(),
+			baseClock: Joi.number().required(),
+			boostClock: Joi.number().required(),
+		}),
+		cache: Joi.object({
+			l1: Joi.string().required(),
+			l2: Joi.string().required(),
+			l3: Joi.string().required(),
+		}),
+		hyperthreading: Joi.boolean().required(),
+		pcieSupport: Joi.string().required(),
+		maxPcieLanes: Joi.number().required(),
+		virtualisationSupport: Joi.boolean().required(),
+	});
+	return schema.validate(cpu);
 };
 
 export default {

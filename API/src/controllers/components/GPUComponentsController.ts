@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import GPUComponent from '../../models/components/GPUComponent';
 import { IGPUComponent } from '../../types/models';
+import { isValidObjectId } from 'mongoose';
 
 const getAllGPUComponents = async (
 	req: Request,
@@ -21,9 +22,17 @@ const getGPUComponentById = async (
 ): Promise<void> => {
 	// #swagger.tags = ['GPU']
 	try {
+		if (!isValidObjectId(req.params.id)) {
+			res.status(400).json({ message: 'Invalid ID' });
+			return;
+		}
 		const gpuComponent: IGPUComponent | null = await GPUComponent.findById(
 			req.params.id
 		);
+		if (!gpuComponent) {
+      res.status(404).json({ message: 'Component not found' });
+      return;
+    }
 		res.status(200).json(gpuComponent);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });

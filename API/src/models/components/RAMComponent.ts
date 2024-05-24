@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IRAMComponent } from '../../types/models';
+import { ComponentType, IRAMComponent } from '../../types/models';
 import Component from './Component';
 
 const RAMComponent = new Schema<IRAMComponent>({
@@ -13,4 +13,7 @@ const RAMComponent = new Schema<IRAMComponent>({
 	voltage: { type: Number, required: true },
 });
 
-export default Component.discriminator<IRAMComponent>('RAM', RAMComponent);
+export default Component.discriminator<IRAMComponent>(
+	ComponentType.RAM,
+	RAMComponent
+);

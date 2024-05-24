@@ -16,7 +16,7 @@ export interface ICPUComponent extends IComponent {
 	boostClock: number; // in MHz
 	tdp: number; // in Watt
 	socket: string;
-	technologie: number; // in nm
+	technology: number; // in nm
 	integratedGraphics?: {
 		name: string;
 		brand: string;

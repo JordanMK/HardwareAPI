@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IGPUComponent } from '../../types/models';
+import { ComponentType, IGPUComponent } from '../../types/models';
 import Component from './Component';
 
 const GPUComponent = new Schema<IGPUComponent>({
@@ -20,4 +20,7 @@ const GPUComponent = new Schema<IGPUComponent>({
 	virtualisationSupport: { type: Boolean, required: true },
 });
 
-export default Component.discriminator<IGPUComponent>('GPU', GPUComponent);
+export default Component.discriminator<IGPUComponent>(
+	ComponentType.GPU,
+	GPUComponent
+);

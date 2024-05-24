@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { ICPUComponent } from '../../types/models';
+import { ComponentType, ICPUComponent } from '../../types/models';
 import Component from './Component';
 
 const CPUComponent = new Schema<ICPUComponent>({
@@ -13,7 +13,7 @@ const CPUComponent = new Schema<ICPUComponent>({
 	boostClock: { type: Number, required: true },
 	tdp: { type: Number, required: true },
 	socket: { type: String, required: true },
-	technologie: { type: Number, required: true },
+	technology: { type: Number, required: true },
 	integratedGraphics: {
 		name: {
 			type: String,
@@ -63,4 +63,7 @@ const CPUComponent = new Schema<ICPUComponent>({
 	virtualisationSupport: { type: Boolean, required: true },
 });
 
-export default Component.discriminator<ICPUComponent>('CPU', CPUComponent);
+export default Component.discriminator<ICPUComponent>(
+	ComponentType.CPU,
+	CPUComponent
+);

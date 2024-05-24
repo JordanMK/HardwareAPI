@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from 'mongoose';
-import { IUser, IUserMethods } from '../types/models';
+import { IUser, IUserMethods, UserRole } from '../types/models';
 import jwt from 'jsonwebtoken';
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 	},
 	role: {
 		type: String,
-		enum: ['user', 'admin'],
+		enum: [UserRole.USER, UserRole.USER],
 		required: true,
 	},
 	refreshToken: {
@@ -38,7 +38,7 @@ userSchema.methods.generateAccessToken = function () {
 		{ id: this.id, role: this.role },
 		process.env.ACCESS_TOKEN_SECRET as string,
 		{
-			expiresIn: '1m',
+			expiresIn: '1d',
 		}
 	);
 };
@@ -48,7 +48,7 @@ userSchema.methods.generateRefreshToken = function () {
 		{ id: this.id, role: this.role },
 		process.env.REFRESH_TOKEN_SECRET as string,
 		{
-			expiresIn: '1m',
+			expiresIn: '1d',
 		}
 	);
 };

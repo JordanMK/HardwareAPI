@@ -14,7 +14,7 @@ const verifyRole = (...allowedRoles: UserRole[]) => {
 		const result = roles.includes(req.role);
 		if (!result) {
 			return res.status(403).json({
-				message: 'You do not have permissions to access this route resource',
+				message: 'You do not have permissions to access this resource',
 			});
 		}
 		next();
