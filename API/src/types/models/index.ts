@@ -1,4 +1,7 @@
+import { ObjectId } from 'mongoose';
+
 export interface IComponent {
+	id: ObjectId;
 	brand: string;
 	name: string;
 	componentType: ComponentType;
@@ -26,14 +29,44 @@ export interface ICPUComponent extends IComponent {
 		boostClock: number; // in MHz
 	};
 	cache: {
-		l1: string; // in kb
-		l2: string; // in kb
-		l3: string; // in kb
+		l1: number; // in kb
+		l2: number; // in kb
+		l3: number; // in kb
 	};
 	hyperthreading: boolean;
 	pcieSupport: string;
 	maxPcieLanes: number;
 	virtualisationSupport: boolean;
+}
+
+interface ICPUComponentQuery {
+	id?: ObjectId;
+	brand?: string;
+	name?: string;
+	family?: string;
+	series?: string;
+	generation?: string;
+	architecture?: string;
+	cores?: number;
+	threads?: number;
+	baseClock?: number; // in MHz
+	boostClock?: number; // in MHz
+	tdp?: number; // in Watt
+	socket?: string;
+	technology?: number; // in nm
+	integratedGraphicsName?: string;
+	integratedGraphicsBrand?: string;
+	integratedGraphicsGeneration?: string;
+	integratedGraphicsArchitecture?: string;
+	integratedGraphicsBaseClock?: string;
+	integratedGraphicsBoostClock?: string;
+	cacheL1?: string;
+	cacheL2?: string;
+	cacheL3?: string;
+	hyperthreading?: boolean;
+	pcieSupport?: string;
+	maxPcieLanes?: number;
+	virtualisationSupport?: boolean;
 }
 
 export interface IGPUComponent extends IComponent {
@@ -66,7 +99,7 @@ export interface IRAMComponent extends IComponent {
 }
 
 export interface IUser {
-	id: string;
+	id: ObjectId;
 	username: string;
 	email: string;
 	password: string;

@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
 import CPUComponentsController from '../../../../controllers/components/CPUComponentsController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
@@ -13,11 +13,16 @@ router
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
 		CPUComponentsController.updateCPUComponent
+	)
+	.delete(
+		auth,
+		verifyRole(UserRole.ADMIN),
+		CPUComponentsController.deleteCPUComponent
 	);
 
 router
 	.route('/')
-	.get(CPUComponentsController.getAllCPUComponents)
+	.get(CPUComponentsController.getCPUComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),

@@ -10,6 +10,6 @@ router.use('/cpu', CPUComponents);
 router.use('/gpu', GPUComponents);
 router.use('/ram', RAMComponents);
 router.route('/:id').get(componentsController.getComponentById);
-router.route('/').get(componentsController.getAllComponents);
+router.route('/').get(componentsController.getComponents);
 
 export const components = router;

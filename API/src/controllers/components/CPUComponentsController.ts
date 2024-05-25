@@ -1,16 +1,21 @@
 import { Request, Response } from 'express';
 import CPUComponent from '../../models/components/CPUComponent';
-import { ComponentType, ICPUComponent } from '../../types/models';
+import { ICPUComponent } from '../../types/models';
 import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
+import getComponentById from './componentsController';
 
-const getAllCPUComponents = async (
-	req: Request,
-	res: Response
-): Promise<void> => {
+const getCPUComponents = async (req: Request, res: Response): Promise<void> => {
 	// #swagger.tags = ['CPU']
+	const query: Partial<ICPUComponent> =
+		Object.values(req.query).length > 0 ? req.query : req.body;
+	const { error } = validateCPUComponentQuery(query);
+	if (error) {
+		res.status(400).json({ message: error.message });
+		return;
+	}
 	try {
-		const cpuComponents: ICPUComponent[] = await CPUComponent.find();
+		const cpuComponents: ICPUComponent[] = await CPUComponent.find(query);
 		res.status(200).json(cpuComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -21,20 +26,26 @@ const getCPUComponentById = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
-	// #swagger.tags = ['CPU']
+	if (Object.values(req.query).length > 0) {
+		console.log(Object.values(req.query));
+		res.status(400).json({
+			message: 'This route does not allow additional query parameters',
+		});
+		return;
+	}
+	if (!isValidObjectId(req.params.id)) {
+		res.status(400).json({ message: 'Invalid ID' });
+		return;
+	}
 	try {
-		if (!isValidObjectId(req.params.id)) {
-			res.status(400).json({ message: 'Invalid ID' });
-			return;
-		}
-		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
+		const component: ICPUComponent | null = await CPUComponent.findById(
 			req.params.id
 		);
-		if (!cpuComponent) {
+		if (!component) {
 			res.status(404).json({ message: 'Component not found' });
 			return;
 		}
-		res.status(200).json(cpuComponent);
+		res.status(200).json(component);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
@@ -50,16 +61,26 @@ const createCPUComponent = async (
             required: true,
             schema: { $ref: "#/components/schemas/CPU" }
     } */
-	const { error } = validateCPUComponent(req.body);
+	const body: ICPUComponent = req.body;
+	const { error } = validateCPUComponent(body);
 	if (error) {
-		res.status(400).json({ message: error.details[0].message });
+		res.status(400).json({ message: error.message });
 		return;
 	}
 	try {
-		const cpuComponent: ICPUComponent = await CPUComponent.create(req.body);
+		const nameRegex = new RegExp(body.name as string, 'i');
+		const duplicate = await CPUComponent.find({ name: nameRegex });
+		if (duplicate) {
+			res.status(409).json({ message: 'This component already exists' });
+			return;
+		}
+		const cpuComponent: ICPUComponent = await CPUComponent.create(body);
+		if (!cpuComponent) {
+			res.status(500).json({ message: 'Error creating CPU' });
+		}
 		res.status(201).json(cpuComponent);
 	} catch (error: any) {
-		const errorDetails = { message: error.message, sent: req.body };
+		const errorDetails = { message: error.message };
 		res.status(500).json(errorDetails);
 	}
 };
@@ -70,8 +91,13 @@ const updateCPUComponent = async (
 ): Promise<void> => {
 	// #swagger.tags = ['CPU']
 	/* #swagger.security = [{"bearerAuth": []}] */
-	if (!req.params.id) {
-		res.status(400).json({ message: 'No ID provided' });
+	if (!isValidObjectId(req.params.id)) {
+		res.status(400).json({ message: 'Invalid ID' });
+		return;
+	}
+	const { error } = validateCPUComponentUpdate(req.body);
+	if (error) {
+		res.status(400).json({ message: error.message });
 		return;
 	}
 	try {
@@ -79,44 +105,120 @@ const updateCPUComponent = async (
 			req.params.id
 		);
 		if (!cpuComponent) {
-			res.status(404).json({ message: 'CPU Component not found' });
-		} else {
-			const updatedCPUComponent: ICPUComponent | null =
-				await CPUComponent.findByIdAndUpdate(req.params.id, req.body, {
-					new: true,
-				});
-			res.status(200).json(updatedCPUComponent);
+			res.status(404).json({ message: 'Component not found' });
+			return;
 		}
-	} catch (error: any) {}
+		const updatedCPUComponent: ICPUComponent | null =
+			await CPUComponent.findByIdAndUpdate(req.params.id, req.body, {
+				new: true,
+			});
+		if (!updatedCPUComponent) {
+			res.status(500).json({ message: 'Error updating CPU' });
+			return;
+		}
+		res.status(200).json(updatedCPUComponent);
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
 };
 
 const deleteCPUComponent = async (
 	req: Request,
 	res: Response
 ): Promise<void> => {
-	// #swagger.tags = ['CPU']
-	/* #swagger.security = [{"bearerAuth": []}] */
-	if (!req.params.id) {
-		res.status(400).json({ message: 'No ID provided' });
+	if (!isValidObjectId(req.params.id)) {
+		res.status(400).json({ message: 'Invalid ID' });
 		return;
 	}
 	try {
-		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
+		const deleted: ICPUComponent | null = await CPUComponent.findByIdAndDelete(
 			req.params.id
 		);
-		if (!cpuComponent) {
-			res.status(404).json({ message: 'CPU Component not found' });
-		} else {
-			await CPUComponent.findByIdAndDelete(req.params.id);
-			res.status(200).json({ message: 'CPU Component deleted' });
+		if (!deleted) {
+			res.status(404).json({ message: 'Component not found' });
+			return;
 		}
+		res.status(200).json(deleted);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
 };
 
+const validateCPUComponentQuery = (query: Partial<ICPUComponent>) => {
+	const schema = Joi.object<ICPUComponent>({
+		id: Joi.string(),
+		brand: Joi.string(),
+		name: Joi.string(),
+		family: Joi.string(),
+		series: Joi.string(),
+		generation: Joi.string(),
+		architecture: Joi.string(),
+		cores: Joi.number(),
+		threads: Joi.number(),
+		baseClock: Joi.number(),
+		boostClock: Joi.number(),
+		tdp: Joi.number(),
+		socket: Joi.string(),
+		technology: Joi.number(),
+		integratedGraphics: Joi.object({
+			name: Joi.string(),
+			brand: Joi.string(),
+			generation: Joi.string(),
+			architecture: Joi.string(),
+			baseClock: Joi.number(),
+			boostClock: Joi.number(),
+		}),
+		cache: Joi.object({
+			l1: Joi.string(),
+			l2: Joi.string(),
+			l3: Joi.string(),
+		}),
+		hyperthreading: Joi.boolean(),
+		pcieSupport: Joi.string(),
+		maxPcieLanes: Joi.number(),
+		virtualisationSupport: Joi.boolean(),
+	});
+	return schema.validate(query);
+};
+
+const validateCPUComponentUpdate = (query: Partial<ICPUComponent>) => {
+	const schema = Joi.object<ICPUComponent>({
+		brand: Joi.string(),
+		name: Joi.string(),
+		family: Joi.string(),
+		series: Joi.string(),
+		generation: Joi.string(),
+		architecture: Joi.string(),
+		cores: Joi.number(),
+		threads: Joi.number(),
+		baseClock: Joi.number(),
+		boostClock: Joi.number(),
+		tdp: Joi.number(),
+		socket: Joi.string(),
+		technology: Joi.number(),
+		integratedGraphics: Joi.object({
+			name: Joi.string(),
+			brand: Joi.string(),
+			generation: Joi.string(),
+			architecture: Joi.string(),
+			baseClock: Joi.number(),
+			boostClock: Joi.number(),
+		}),
+		cache: Joi.object({
+			l1: Joi.string(),
+			l2: Joi.string(),
+			l3: Joi.string(),
+		}),
+		hyperthreading: Joi.boolean(),
+		pcieSupport: Joi.string(),
+		maxPcieLanes: Joi.number(),
+		virtualisationSupport: Joi.boolean(),
+	});
+	return schema.validate(query);
+};
+
 const validateCPUComponent = (cpu: ICPUComponent) => {
-	const schema = Joi.object<Omit<ICPUComponent, 'componentType'>>({
+	const schema = Joi.object<ICPUComponent>({
 		brand: Joi.string().required(),
 		name: Joi.string().required(),
 		images: Joi.array(),
@@ -143,7 +245,7 @@ const validateCPUComponent = (cpu: ICPUComponent) => {
 			l1: Joi.string().required(),
 			l2: Joi.string().required(),
 			l3: Joi.string().required(),
-		}),
+		}).required(),
 		hyperthreading: Joi.boolean().required(),
 		pcieSupport: Joi.string().required(),
 		maxPcieLanes: Joi.number().required(),
@@ -153,8 +255,9 @@ const validateCPUComponent = (cpu: ICPUComponent) => {
 };
 
 export default {
-	getAllCPUComponents,
+	getCPUComponents,
 	getCPUComponentById,
 	createCPUComponent,
 	updateCPUComponent,
+	deleteCPUComponent,
 };
