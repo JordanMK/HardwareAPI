@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 import Component from '../../models/components/Component';
-import { IComponent } from '../../types/models';
+import { ComponentType, IComponent } from '../../types/models';
 import { isValidObjectId } from 'mongoose';
 import Joi from 'joi';
+
+const getComponentTypes = (req: Request, res: Response) => {
+	res.status(200).json(Object.values(ComponentType));
+};
 
 const getComponents = async (req: Request, res: Response): Promise<void> => {
 	const query: Partial<IComponent> = req.query;
@@ -67,4 +71,9 @@ const validateComponentQuery = (query: Partial<IComponent>) => {
 	return schema.validate(query);
 };
 
-export default { getComponents, getComponentById, deleteComponent };
+export default {
+	getComponents,
+	getComponentById,
+	deleteComponent,
+	getComponentTypes,
+};

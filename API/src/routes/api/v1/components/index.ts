@@ -9,6 +9,7 @@ const router = express.Router();
 router.use('/cpu', CPUComponents);
 router.use('/gpu', GPUComponents);
 router.use('/ram', RAMComponents);
+router.route('/componentTypes').get(componentsController.getComponentTypes);
 router.route('/:id').get(componentsController.getComponentById);
 router.route('/').get(componentsController.getComponents);
 
