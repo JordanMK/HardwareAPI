@@ -17,6 +17,7 @@ import { auth } from './routes/api/auth';
 import cookieParser = require('cookie-parser');
 import { refresh } from './routes/api/refresh';
 import { logout } from './routes/api/logout';
+import logAcces from './middleware/logAcces';
 
 dotenv.config();
 connectDB();
@@ -41,11 +42,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors(corsOptions));
 
 // Logging
-app.use(
-	morgan(':date[clf] | :url | :method | :status | :remote-addr | :referrer', {
-		stream: fs.createWriteStream('./src/logs/access.log', { flags: 'a' }),
-	})
-);
+app.use(logAcces);
 
 // Components routes
 app.use('/api/v1/components', components);
