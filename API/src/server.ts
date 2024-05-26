@@ -2,15 +2,11 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import { serve, setup } from 'swagger-ui-express';
-import swaggerJson from './swagger/swagger.json';
 import connectDB from './config/dbConn';
 import { components } from './routes/api/v1/components';
 import path from 'path';
-import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler';
 import cors from 'cors';
-import fs from 'fs';
 import corsOptions from './config/corsOptions';
 import { register } from './routes/api/register';
 import { auth } from './routes/api/auth';
@@ -46,9 +42,6 @@ app.use(logAcces);
 
 // Components routes
 app.use('/api/v1/components', components);
-
-// Swagger docs
-app.use('/api/v1/docs', serve, setup(swaggerJson));
 
 // Register
 app.use('/api/register', register);
