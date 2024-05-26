@@ -1,9 +1,9 @@
 import { CorsOptions } from 'cors';
 
-const whitelist = ['http://localhost:4000'];
+const whitelist = ['http://localhost:4000', 'http://localhost:5173'];
 const corsOptions: CorsOptions = {
 	origin: (origin, callback) => {
-		if (whitelist.indexOf(origin as string) !== -1 || !origin) {
+		if (whitelist.includes(origin as string) || !origin) {
 			callback(null, true);
 		} else {
 			callback(new Error('Not allowed by CORS'));
