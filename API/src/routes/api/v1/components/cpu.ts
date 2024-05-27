@@ -1,5 +1,5 @@
 import express from 'express';
-import CPUComponentsController from '../../../../controllers/components/CPUComponentsController';
+import CPUController from '../../../../controllers/components/CPUController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
@@ -8,25 +8,21 @@ const router = express.Router();
 
 router
 	.route('/:id')
-	.get(CPUComponentsController.getCPUComponentById)
+	.get(CPUController.getCPUComponentById)
 	.patch(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		CPUComponentsController.updateCPUComponent
+		CPUController.updateCPUComponent
 	)
-	.delete(
-		auth,
-		verifyRole(UserRole.ADMIN),
-		CPUComponentsController.deleteCPUComponent
-	);
+	.delete(auth, verifyRole(UserRole.ADMIN), CPUController.deleteCPUComponent);
 
 router
 	.route('/')
-	.get(CPUComponentsController.getCPUComponents)
+	.get(CPUController.getCPUComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		CPUComponentsController.createCPUComponent
+		CPUController.createCPUComponent
 	);
 
 export const CPUComponents = router;

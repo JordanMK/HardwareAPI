@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 import { ComponentType, ICPUComponent } from '../../types/models';
 import Component from './Component';
 
-const CPUComponent = new Schema<ICPUComponent>({
+const CPU = new Schema<ICPUComponent>({
 	family: { type: String, required: true },
 	series: { type: String, required: true },
 	generation: { type: String, required: true },
@@ -63,7 +63,4 @@ const CPUComponent = new Schema<ICPUComponent>({
 	virtualisationSupport: { type: Boolean, required: true },
 });
 
-export default Component.discriminator<ICPUComponent>(
-	ComponentType.CPU,
-	CPUComponent
-);
+export default Component.discriminator<ICPUComponent>(ComponentType.CPU, CPU);

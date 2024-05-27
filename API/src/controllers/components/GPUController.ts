@@ -1,20 +1,22 @@
 import { Request, Response } from 'express';
-import GPUComponent from '../../models/components/GPUComponent';
+import GPU from '../../models/components/GPU';
 import { IGPUComponent } from '../../types/models';
 import { isValidObjectId } from 'mongoose';
 import Joi from 'joi';
+import { transformDotNotation } from '../queryController';
 
 const getGPUComponents = async (req: Request, res: Response): Promise<void> => {
 	// #swagger.tags = ['GPU']
 	const query: Partial<IGPUComponent> =
 		Object.values(req.query).length > 0 ? req.query : req.body;
-	const { error } = validateGPUComponentQuery(query);
+		const tranformedQuery = transformDotNotation(query)
+	const { error } = validateGPUComponentQuery(tranformedQuery);
 	if (error) {
 		res.status(400).json({ message: error.message });
 		return;
 	}
 	try {
-		const gpuComponents: IGPUComponent[] = await GPUComponent.find(query);
+		const gpuComponents: IGPUComponent[] = await GPU.find(query);
 		res.status(200).json(gpuComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -37,9 +39,7 @@ const getGPUComponentById = async (
 		return;
 	}
 	try {
-		const component: IGPUComponent | null = await GPUComponent.findById(
-			req.params.id
-		);
+		const component: IGPUComponent | null = await GPU.findById(req.params.id);
 		if (!component) {
 			res.status(404).json({ message: 'Component not found' });
 			return;
@@ -64,12 +64,12 @@ const createGPUComponent = async (
 	}
 	try {
 		const nameRegex = new RegExp(body.name as string, 'i');
-		const duplicate = await GPUComponent.find({ name: nameRegex });
+		const duplicate = await GPU.find({ name: nameRegex });
 		if (duplicate) {
 			res.status(409).json({ message: 'This component already exists' });
 			return;
 		}
-		const gpuComponent: IGPUComponent = await GPUComponent.create(body);
+		const gpuComponent: IGPUComponent = await GPU.create(body);
 		res.status(201).json(gpuComponent);
 	} catch (error: any) {
 		const errorDetails = { message: error.message, sent: req.body };
@@ -93,7 +93,7 @@ const updateGPUComponent = async (
 		return;
 	}
 	try {
-		const gpuComponent: IGPUComponent | null = await GPUComponent.findById(
+		const gpuComponent: IGPUComponent | null = await GPU.findById(
 			req.params.id
 		);
 		if (!gpuComponent) {
@@ -101,7 +101,7 @@ const updateGPUComponent = async (
 			return;
 		}
 		const updatedGPUComponent: IGPUComponent | null =
-			await GPUComponent.findByIdAndUpdate(req.params.id, req.body, {
+			await GPU.findByIdAndUpdate(req.params.id, req.body, {
 				new: true,
 			});
 		if (!updatedGPUComponent) {
@@ -125,7 +125,7 @@ const deleteGPUComponent = async (
 		return;
 	}
 	try {
-		const deleted = await GPUComponent.findByIdAndDelete(req.params.id);
+		const deleted = await GPU.findByIdAndDelete(req.params.id);
 		if (!deleted) {
 			res.status(404).json({ message: 'Component not found' });
 			return;

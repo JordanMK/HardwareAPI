@@ -1,21 +1,23 @@
 import { Request, Response } from 'express';
-import RAMComponent from '../../models/components/RAMComponent';
+import RAM from '../../models/components/RAM';
 import { IRAMComponent } from '../../types/models';
 import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
 import getComponentById from './componentsController';
+import { transformDotNotation } from '../queryController';
 
 const getRAMComponents = async (req: Request, res: Response): Promise<void> => {
 	// #swagger.tags = ['RAM']
 	const query: Partial<IRAMComponent> =
 		Object.values(req.query).length > 0 ? req.query : req.body;
-	const { error } = validateRAMComponentQuery(query);
+	const tranformedQuery = transformDotNotation(query);
+	const { error } = validateRAMComponentQuery(tranformedQuery);
 	if (error) {
 		res.status(400).json({ message: error.message });
 		return;
 	}
 	try {
-		const ramComponents: IRAMComponent[] = await RAMComponent.find(query);
+		const ramComponents: IRAMComponent[] = await RAM.find(query);
 		res.status(200).json(ramComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -38,9 +40,7 @@ const getRAMComponentById = async (
 		return;
 	}
 	try {
-		const component: IRAMComponent | null = await RAMComponent.findById(
-			req.params.id
-		);
+		const component: IRAMComponent | null = await RAM.findById(req.params.id);
 		if (!component) {
 			res.status(404).json({ message: 'Component not found' });
 			return;
@@ -69,12 +69,12 @@ const createRAMComponent = async (
 	}
 	try {
 		const nameRegex = new RegExp(body.name as string, 'i');
-		const duplicate = await RAMComponent.find({ name: nameRegex });
+		const duplicate = await RAM.find({ name: nameRegex });
 		if (duplicate) {
 			res.status(409).json({ message: 'This component already exists' });
 			return;
 		}
-		const ramComponent: IRAMComponent = await RAMComponent.create(body);
+		const ramComponent: IRAMComponent = await RAM.create(body);
 		if (!ramComponent) {
 			res.status(500).json({ message: 'Error creating RAM' });
 		}
@@ -101,7 +101,7 @@ const updateRAMComponent = async (
 		return;
 	}
 	try {
-		const ramComponent: IRAMComponent | null = await RAMComponent.findById(
+		const ramComponent: IRAMComponent | null = await RAM.findById(
 			req.params.id
 		);
 		if (!ramComponent) {
@@ -109,7 +109,7 @@ const updateRAMComponent = async (
 			return;
 		}
 		const updatedRAMComponent: IRAMComponent | null =
-			await RAMComponent.findByIdAndUpdate(req.params.id, req.body, {
+			await RAM.findByIdAndUpdate(req.params.id, req.body, {
 				new: true,
 			});
 		if (!updatedRAMComponent) {
@@ -131,7 +131,7 @@ const deleteRAMComponent = async (
 		return;
 	}
 	try {
-		const deleted: IRAMComponent | null = await RAMComponent.findByIdAndDelete(
+		const deleted: IRAMComponent | null = await RAM.findByIdAndDelete(
 			req.params.id
 		);
 		if (!deleted) {

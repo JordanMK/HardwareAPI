@@ -1,5 +1,5 @@
 import express from 'express';
-import GPUComponentsController from '../../../../controllers/components/GPUComponentsController';
+import GPUController from '../../../../controllers/components/GPUController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
@@ -8,25 +8,21 @@ const router = express.Router();
 
 router
 	.route('/:id')
-	.get(GPUComponentsController.getGPUComponentById)
+	.get(GPUController.getGPUComponentById)
 	.patch(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		GPUComponentsController.updateGPUComponent
+		GPUController.updateGPUComponent
 	)
-	.delete(
-		auth,
-		verifyRole(UserRole.ADMIN),
-		GPUComponentsController.deleteGPUComponent
-	);
+	.delete(auth, verifyRole(UserRole.ADMIN), GPUController.deleteGPUComponent);
 
 router
 	.route('/')
-	.get(GPUComponentsController.getGPUComponents)
+	.get(GPUController.getGPUComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		GPUComponentsController.createGPUComponent
+		GPUController.createGPUComponent
 	);
 
 export const GPUComponents = router;

@@ -112,6 +112,37 @@ export interface IUserMethods {
 	generateRefreshToken: () => string;
 }
 
+export interface IDevice {
+	id: ObjectId;
+	brand: string;
+	name: string;
+	deviceType: DeviceType;
+	images: string[];
+}
+
+export enum DeviceType {
+	COMPUTER = 'Computer',
+}
+
+export interface IComputer {
+	computerType: ComputerType;
+	cpu: ICPUComponent;
+	gpu?: IGPUComponent;
+	ram: IComputerRAMComponents;
+	ramModules: number;
+	ramCapacity: number; // in GB
+}
+
+export enum ComputerType {
+	DESKTOP = 'Desktop',
+	LAPTOP = 'Laptop',
+}
+
+interface IComputerRAMComponents extends IRAMComponent {
+	modules: number;
+	capacity: number; // in GB
+}
+
 export enum ComponentType {
 	CPU = 'CPU',
 	GPU = 'GPU',

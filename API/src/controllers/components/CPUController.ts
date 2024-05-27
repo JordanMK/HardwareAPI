@@ -1,21 +1,23 @@
 import { Request, Response } from 'express';
-import CPUComponent from '../../models/components/CPUComponent';
+import CPU from '../../models/components/CPU';
 import { ICPUComponent } from '../../types/models';
 import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
 import getComponentById from './componentsController';
+import { transformDotNotation } from '../queryController';
 
 const getCPUComponents = async (req: Request, res: Response): Promise<void> => {
 	// #swagger.tags = ['CPU']
 	const query: Partial<ICPUComponent> =
 		Object.values(req.query).length > 0 ? req.query : req.body;
-	const { error } = validateCPUComponentQuery(query);
+	const tranformedQuery = transformDotNotation(query);
+	const { error } = validateCPUComponentQuery(tranformedQuery);
 	if (error) {
 		res.status(400).json({ message: error.message });
 		return;
 	}
 	try {
-		const cpuComponents: ICPUComponent[] = await CPUComponent.find(query);
+		const cpuComponents: ICPUComponent[] = await CPU.find(query);
 		res.status(200).json(cpuComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -38,9 +40,7 @@ const getCPUComponentById = async (
 		return;
 	}
 	try {
-		const component: ICPUComponent | null = await CPUComponent.findById(
-			req.params.id
-		);
+		const component: ICPUComponent | null = await CPU.findById(req.params.id);
 		if (!component) {
 			res.status(404).json({ message: 'Component not found' });
 			return;
@@ -69,12 +69,13 @@ const createCPUComponent = async (
 	}
 	try {
 		const nameRegex = new RegExp(body.name as string, 'i');
-		const duplicate = await CPUComponent.find({ name: nameRegex });
-		if (duplicate) {
+		const duplicate = await CPU.find({ name: nameRegex });
+		console.log(duplicate);
+		if (duplicate.length > 0) {
 			res.status(409).json({ message: 'This component already exists' });
 			return;
 		}
-		const cpuComponent: ICPUComponent = await CPUComponent.create(body);
+		const cpuComponent: ICPUComponent = await CPU.create(body);
 		if (!cpuComponent) {
 			res.status(500).json({ message: 'Error creating CPU' });
 		}
@@ -101,7 +102,7 @@ const updateCPUComponent = async (
 		return;
 	}
 	try {
-		const cpuComponent: ICPUComponent | null = await CPUComponent.findById(
+		const cpuComponent: ICPUComponent | null = await CPU.findById(
 			req.params.id
 		);
 		if (!cpuComponent) {
@@ -109,7 +110,7 @@ const updateCPUComponent = async (
 			return;
 		}
 		const updatedCPUComponent: ICPUComponent | null =
-			await CPUComponent.findByIdAndUpdate(req.params.id, req.body, {
+			await CPU.findByIdAndUpdate(req.params.id, req.body, {
 				new: true,
 			});
 		if (!updatedCPUComponent) {
@@ -131,7 +132,7 @@ const deleteCPUComponent = async (
 		return;
 	}
 	try {
-		const deleted: ICPUComponent | null = await CPUComponent.findByIdAndDelete(
+		const deleted: ICPUComponent | null = await CPU.findByIdAndDelete(
 			req.params.id
 		);
 		if (!deleted) {

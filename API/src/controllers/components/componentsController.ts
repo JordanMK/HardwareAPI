@@ -3,6 +3,7 @@ import Component from '../../models/components/Component';
 import { ComponentType, IComponent } from '../../types/models';
 import { isValidObjectId } from 'mongoose';
 import Joi from 'joi';
+import { transformDotNotation } from '../queryController';
 
 const getComponentTypes = (req: Request, res: Response) => {
 	res.status(200).json(Object.values(ComponentType));
@@ -10,7 +11,8 @@ const getComponentTypes = (req: Request, res: Response) => {
 
 const getComponents = async (req: Request, res: Response): Promise<void> => {
 	const query: Partial<IComponent> = req.query;
-	const { error } = validateComponentQuery(query);
+	const tranformedQuery = transformDotNotation(query);
+	const { error } = validateComponentQuery(tranformedQuery);
 	if (error) {
 		res.status(400).json({ message: 'Invalid query' });
 		return;
@@ -63,6 +65,7 @@ const deleteComponent = async (req: Request, res: Response): Promise<void> => {
 
 const validateComponentQuery = (query: Partial<IComponent>) => {
 	const schema = Joi.object<IComponent>({
+		id: Joi.string(),
 		brand: Joi.string(),
 		name: Joi.string(),
 		componentType: Joi.string(),

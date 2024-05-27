@@ -1,5 +1,5 @@
 import express from 'express';
-import RAMComponentsController from '../../../../controllers/components/RAMComponentsController';
+import RAMController from '../../../../controllers/components/RAMController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
@@ -8,25 +8,21 @@ const router = express.Router();
 
 router
 	.route('/:id')
-	.get(RAMComponentsController.getRAMComponentById)
+	.get(RAMController.getRAMComponentById)
 	.patch(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		RAMComponentsController.updateRAMComponent
+		RAMController.updateRAMComponent
 	)
-	.delete(
-		auth,
-		verifyRole(UserRole.ADMIN),
-		RAMComponentsController.deleteRAMComponent
-	);
+	.delete(auth, verifyRole(UserRole.ADMIN), RAMController.deleteRAMComponent);
 
 router
 	.route('/')
-	.get(RAMComponentsController.getRAMComponents)
+	.get(RAMController.getRAMComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
-		RAMComponentsController.createRAMComponent
+		RAMController.createRAMComponent
 	);
 
 export const RAMComponents = router;

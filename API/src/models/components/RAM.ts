@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 import { ComponentType, IRAMComponent } from '../../types/models';
 import Component from './Component';
 
-const RAMComponent = new Schema<IRAMComponent>({
+const RAM = new Schema<IRAMComponent>({
 	series: { type: String, required: true },
 	memoryType: { type: String, required: true },
 	formFactor: { type: String, required: true },
@@ -13,7 +13,4 @@ const RAMComponent = new Schema<IRAMComponent>({
 	voltage: { type: Number, required: true },
 });
 
-export default Component.discriminator<IRAMComponent>(
-	ComponentType.RAM,
-	RAMComponent
-);
+export default Component.discriminator<IRAMComponent>(ComponentType.RAM, RAM);
