@@ -14,6 +14,7 @@ import cookieParser = require('cookie-parser');
 import { refresh } from './routes/api/refresh';
 import { logout } from './routes/api/logout';
 import logAcces from './middleware/logAcces';
+import { devices } from './routes/api/v1/devices';
 
 dotenv.config();
 connectDB();
@@ -42,6 +43,9 @@ app.use(logAcces);
 
 // Components routes
 app.use('/api/v1/components', components);
+
+// Devices routes
+app.use('/api/v1/devices', devices);
 
 // Register
 app.use('/api/register', register);

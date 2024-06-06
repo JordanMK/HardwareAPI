@@ -19,4 +19,4 @@ const componentSchema = new Schema<IDevice>(
 	{ discriminatorKey: 'deviceType' }
 );
 
-export default mongoose.model<IDevice>('Component', componentSchema);
+export default mongoose.model<IDevice>('Device', componentSchema);

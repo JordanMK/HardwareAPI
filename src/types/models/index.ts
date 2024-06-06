@@ -125,6 +125,10 @@ export enum DeviceType {
 }
 
 export interface IComputer {
+	id: ObjectId;
+	brand: string;
+	name: string;
+	images: string[];
 	computerType: ComputerType;
 	cpu: ICPUComponent;
 	gpu?: IGPUComponent;
