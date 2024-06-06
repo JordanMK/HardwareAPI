@@ -7,12 +7,6 @@ import { isValidObjectId } from 'mongoose';
 const getComputers = async (req: Request, res: Response): Promise<void> => {
 	const query: Partial<IComputer> =
 		Object.values(req.query).length > 0 ? req.query : req.body;
-	// const tranformedQuery = transformDotNotation(query);
-	// const { error } = validateCPUComponentQuery(tranformedQuery);
-	// if (error) {
-	// 	res.status(400).json({ message: error.message });
-	// 	return;
-	// }
 	try {
 		const computers: IComputer[] = await Computer.find()
 			.populate('cpu')
@@ -25,21 +19,15 @@ const getComputers = async (req: Request, res: Response): Promise<void> => {
 };
 
 const createComputer = async (req: Request, res: Response): Promise<void> => {
-	const body: IComputer = req.body;
-	const { error } = validateComputer(body);
-	if (error) {
-		res.status(400).json({ message: error.message });
-		return;
-	}
 	try {
-		const nameRegex = new RegExp(body.name as string, 'i');
+		const nameRegex = new RegExp(req.body.name as string, 'i');
 		const duplicate = await Computer.find({ name: nameRegex });
 		console.log(duplicate);
 		if (duplicate.length > 0) {
 			res.status(409).json({ message: 'This computer already exists' });
 			return;
 		}
-		const computer: IComputer = await Computer.create(body);
+		const computer: IComputer = await Computer.create(req.body);
 		if (!computer) {
 			res.status(500).json({ message: 'Error creating computer' });
 		}
@@ -67,23 +55,6 @@ const deleteComputer = async (req: Request, res: Response): Promise<void> => {
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
-};
-
-const validateComputer = (computer: IComputer) => {
-	const schema = Joi.object<IComputer>({
-		brand: Joi.string().required(),
-		name: Joi.string().required(),
-		images: Joi.array(),
-		computerType: Joi.string()
-			.allow(...Object.values(ComponentType))
-			.required(),
-		cpu: Joi.string().required(),
-		gpu: Joi.string(),
-		ram: Joi.string().required(),
-		ramModules: Joi.number().required(),
-		ramCapacity: Joi.number().required(),
-	});
-	return schema.validate(computer);
 };
 
 export default {

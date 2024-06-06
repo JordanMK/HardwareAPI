@@ -3,6 +3,7 @@ import componentsController from '../../../../controllers/components/componentsC
 import { CPUComponents } from './cpu';
 import { GPUComponents } from './gpu';
 import { RAMComponents } from './ram';
+import validator from '../../../../middleware/validator';
 
 const router = express.Router();
 
@@ -11,6 +12,11 @@ router.use('/gpu', GPUComponents);
 router.use('/ram', RAMComponents);
 router.route('/componentTypes').get(componentsController.getComponentTypes);
 router.route('/:id').get(componentsController.getComponentById);
-router.route('/').get(componentsController.getComponents);
+router
+	.route('/')
+	.get(
+		validator('componentQuerySchema', 'query'),
+		componentsController.getComponents
+	);
 
 export const components = router;

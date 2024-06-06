@@ -3,6 +3,7 @@ import CPUController from '../../../../controllers/components/CPUController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
+import validator from '../../../../middleware/validator';
 
 const router = express.Router();
 
@@ -12,16 +13,18 @@ router
 	.patch(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
+		validator('cpuUpdateSchema', 'body'),
 		CPUController.updateCPUComponent
 	)
 	.delete(auth, verifyRole(UserRole.ADMIN), CPUController.deleteCPUComponent);
 
 router
 	.route('/')
-	.get(CPUController.getCPUComponents)
+	.get(validator('cpuQuerySchema', 'query'), CPUController.getCPUComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
+		validator('cpuCreateSchema', 'body'),
 		CPUController.createCPUComponent
 	);
 

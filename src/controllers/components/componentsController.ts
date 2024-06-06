@@ -10,15 +10,8 @@ const getComponentTypes = (req: Request, res: Response) => {
 };
 
 const getComponents = async (req: Request, res: Response): Promise<void> => {
-	const query: Partial<IComponent> = req.query;
-	const tranformedQuery = transformDotNotation(query);
-	const { error } = validateComponentQuery(tranformedQuery);
-	if (error) {
-		res.status(400).json({ message: 'Invalid query' });
-		return;
-	}
 	try {
-		const components: IComponent[] = await Component.find(query);
+		const components: IComponent[] = await Component.find(req.query);
 		res.status(200).json(components);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -26,6 +19,12 @@ const getComponents = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getComponentById = async (req: Request, res: Response): Promise<void> => {
+		if (Object.values(req.query).length > 0) {
+			res.status(400).json({
+				message: 'This route does not allow additional query parameters',
+			});
+			return;
+		}
 	if (!isValidObjectId(req.params.id)) {
 		res.status(400).json({ message: 'Invalid ID' });
 		return;
@@ -61,17 +60,6 @@ const deleteComponent = async (req: Request, res: Response): Promise<void> => {
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
-};
-
-const validateComponentQuery = (query: Partial<IComponent>) => {
-	const schema = Joi.object<IComponent>({
-		id: Joi.string(),
-		brand: Joi.string(),
-		name: Joi.string(),
-		componentType: Joi.string(),
-		images: Joi.array().items(Joi.string()),
-	});
-	return schema.validate(query);
 };
 
 export default {

@@ -70,7 +70,7 @@ const validateDeviceQuery = (query: Partial<IDevice>) => {
 		brand: Joi.string(),
 		name: Joi.string(),
 		deviceType: Joi.string(),
-		images: Joi.array().items(Joi.string()),
+		images: Joi.array().items(Joi.string()).single(),
 	});
 	return schema.validate(query);
 };

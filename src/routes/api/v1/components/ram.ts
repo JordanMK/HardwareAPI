@@ -3,6 +3,7 @@ import RAMController from '../../../../controllers/components/RAMController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
+import validator from '../../../../middleware/validator';
 
 const router = express.Router();
 
@@ -12,16 +13,18 @@ router
 	.patch(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
+		validator('ramUpdateSchema', 'body'),
 		RAMController.updateRAMComponent
 	)
 	.delete(auth, verifyRole(UserRole.ADMIN), RAMController.deleteRAMComponent);
 
 router
 	.route('/')
-	.get(RAMController.getRAMComponents)
+	.get(validator('ramQuerySchema', 'query'), RAMController.getRAMComponents)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
+		validator('ramCreateSchema', 'body'),
 		RAMController.createRAMComponent
 	);
 
