@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import connectDB from './config/dbConn';
 import { components } from './routes/api/v1/components';
 import path from 'path';
@@ -64,26 +63,25 @@ app.use('/api/logout', logout);
 
 // Favicon
 app.get('/favicon.ico', (req: Request, res: Response) => {
-	// #swagger.ignore = true
 	res.sendFile(path.join(__dirname, '../public/img/favicon.ico'));
 });
 
 // Root
 app.get('/', (req: Request, res: Response) => {
-	// #swagger.ignore = true
-	res.send('Hello world');
+	res.sendFile(path.join(__dirname, './views/index.html'));
 });
 
 // 404 Not found
 app.all('*', (req: Request, res: Response) => {
-	// #swagger.ignore = true
-	res.status(404).json({ message: '404 Not found' });
+	res
+		.status(404)
+		.json({ message: '404 Not found' })
+		.sendFile(path.join(__dirname, './views/notFound.html'));
 });
 
 // Error handler
 app.use(errorHandler);
 
-// Function to start the server and connect to the database
 const startServer = async () => {
 	await connectDB().then(() => {
 		if (process.env.NODE_ENV !== 'test') {

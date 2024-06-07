@@ -1,8 +1,6 @@
 import assert from 'assert';
-import { app } from '../../src/server'; // Adjust the import path accordingly
 import Component from '../../src/models/components/Component';
 import { ComponentType } from '../../src/types/models';
-import mongoose from 'mongoose';
 import { server } from '.';
 
 describe('GET /api/v1/components/componentTypes', () => {
@@ -70,9 +68,4 @@ describe('GET /api/v1/components', () => {
 		assert(response.body.length === 1);
 		assert(response.body[0].name === components[0].name);
 	});
-
-	// it('should return 500 on server error', async () => {
-	// 	const response = await request.get('/api/v1/components').expect(500);
-	// 	assert.strictEqual(response.body.message, 'Test error');
-	// });
 });

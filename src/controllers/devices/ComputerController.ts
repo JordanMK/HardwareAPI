@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { ComponentType, ComputerType, IComputer } from '../../types/models';
+import { IComputer } from '../../types/models';
 import Computer from '../../models/devices/Computer';
-import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
 import CPU from '../../models/components/CPU';
 import RAM from '../../models/components/RAM';

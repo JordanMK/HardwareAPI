@@ -1,4 +1,3 @@
-import Joi from 'joi';
 import componentValidator from './components/component.validator';
 import cpuValidator from './components/cpu.validator';
 import gpuValidator from './components/gpu.validator';

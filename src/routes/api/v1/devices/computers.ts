@@ -1,5 +1,4 @@
 import express from 'express';
-import RAMController from '../../../../controllers/components/RAMController';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';

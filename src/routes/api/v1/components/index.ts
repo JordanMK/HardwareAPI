@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
 import componentsController from '../../../../controllers/components/componentsController';
 import { CPUComponents } from './cpu';
 import { GPUComponents } from './gpu';

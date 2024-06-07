@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import { IRAMComponent } from '../../types/models';
 import componentValidator from './component.validator';
-import validators from '..';
 import makeOptional from '../makeOptional';
 
 const ramCreateSchema = Joi.object<IRAMComponent>({

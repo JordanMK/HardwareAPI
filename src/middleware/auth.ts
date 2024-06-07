@@ -1,9 +1,5 @@
-import express, { NextFunction, Request, Response } from 'express';
-import jwt, {
-	JsonWebTokenError,
-	JwtPayload,
-	TokenExpiredError,
-} from 'jsonwebtoken';
+import { NextFunction, Request, Response } from 'express';
+import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 export interface IRequest extends Request {
 	id?: string;

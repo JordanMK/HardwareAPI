@@ -1,6 +1,6 @@
 import { CorsOptions } from 'cors';
 
-const whitelist = ['http://localhost:4000', 'http://localhost:5173'];
+const whitelist = ['http://localhost:3000', 'https://hardwareapi.onrender.com'];
 const corsOptions: CorsOptions = {
 	origin: (origin, callback) => {
 		if (whitelist.includes(origin as string) || !origin) {

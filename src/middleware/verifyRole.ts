@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserRole } from '../types/models';
-import auth from './auth';
 
 interface IRequest extends Request {
 	role?: UserRole;
