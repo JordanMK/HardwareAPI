@@ -18,7 +18,6 @@ import { devices } from './routes/api/v1/devices';
 import { me } from './routes/api/me';
 
 dotenv.config();
-connectDB();
 
 const app: Express = express();
 const PORT: string | number = process.env.PORT || 3000;
@@ -84,9 +83,16 @@ app.all('*', (req: Request, res: Response) => {
 // Error handler
 app.use(errorHandler);
 
-// MongoDB connection
-mongoose.connection.once('open', () => {
-	app.listen(PORT, () => {
-		console.log(`Server running on port: ${PORT}`);
+// Function to start the server and connect to the database
+const startServer = async () => {
+	await connectDB().then(() => {
+		if (process.env.NODE_ENV !== 'test') {
+			app.listen(PORT, () => {
+				console.log(`Server running on port: ${PORT}`);
+			});
+		}
 	});
-});
+};
+
+startServer();
+export { app };

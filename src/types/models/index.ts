@@ -1,7 +1,7 @@
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface IComponent {
-	id: ObjectId;
+	id: mongoose.Types.ObjectId;
 	brand: string;
 	name: string;
 	componentType: ComponentType;
@@ -40,7 +40,7 @@ export interface ICPUComponent extends IComponent {
 }
 
 interface ICPUComponentQuery {
-	id?: ObjectId;
+	id?: mongoose.Types.ObjectId;
 	brand?: string;
 	name?: string;
 	family?: string;
@@ -99,7 +99,7 @@ export interface IRAMComponent extends IComponent {
 }
 
 export interface IUser {
-	id: ObjectId;
+	id: mongoose.Types.ObjectId;
 	username: string;
 	email: string;
 	password: string;
@@ -113,7 +113,7 @@ export interface IUserMethods {
 }
 
 export interface IDevice {
-	id: ObjectId;
+	id: mongoose.Types.ObjectId;
 	brand: string;
 	name: string;
 	deviceType: DeviceType;
@@ -125,7 +125,7 @@ export enum DeviceType {
 }
 
 export interface IComputer {
-	id: ObjectId;
+	id: mongoose.Types.ObjectId;
 	brand: string;
 	name: string;
 	images: string[];

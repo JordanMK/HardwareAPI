@@ -53,9 +53,9 @@ const CPU = new Schema<ICPUComponent>({
 		},
 	},
 	cache: {
-		l1: { type: String, required: true },
-		l2: { type: String, required: true },
-		l3: { type: String, required: true },
+		l1: { type: Number, required: true },
+		l2: { type: Number, required: true },
+		l3: { type: Number, required: true },
 	},
 	hyperthreading: { type: Boolean, required: true },
 	pcieSupport: { type: String, required: true },

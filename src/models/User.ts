@@ -38,7 +38,7 @@ userSchema.methods.generateAccessToken = function () {
 		{ id: this.id, role: this.role },
 		process.env.ACCESS_TOKEN_SECRET as string,
 		{
-			expiresIn: '1d',
+			expiresIn: '7d',
 		}
 	);
 };
@@ -48,7 +48,7 @@ userSchema.methods.generateRefreshToken = function () {
 		{ id: this.id, role: this.role },
 		process.env.REFRESH_TOKEN_SECRET as string,
 		{
-			expiresIn: '1d',
+			expiresIn: '14d',
 		}
 	);
 };
