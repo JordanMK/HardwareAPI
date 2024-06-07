@@ -2,33 +2,33 @@ import express from 'express';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
-import ComputerController from '../../../../controllers/devices/computerController';
+import computerController from '../../../../controllers/devices/computerController';
 import validator from '../../../../middleware/validator';
 
 const router = express.Router();
 
 router
 	.route('/:id')
-	.get(ComputerController.getComputerById)
+	.get(computerController.getComputerById)
 	.put(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
 		validator('computerUpdateSchema', 'body'),
-		ComputerController.updateComputer
+		computerController.updateComputer
 	)
-	.delete(auth, verifyRole(UserRole.ADMIN), ComputerController.deleteComputer);
+	.delete(auth, verifyRole(UserRole.ADMIN), computerController.deleteComputer);
 
 router
 	.route('/')
 	.get(
 		validator('computerQuerySchema', 'query'),
-		ComputerController.getComputers
+		computerController.getComputers
 	)
 	.post(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
 		validator('computerCreateSchema', 'body'),
-		ComputerController.createComputer
+		computerController.createComputer
 	);
 
 export const computers = router;
