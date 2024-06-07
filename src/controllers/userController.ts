@@ -3,38 +3,27 @@ import { IUser, UserRole } from '../types/models';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
-import { isValidObjectId } from 'mongoose';
+import { IRequest } from '../middleware/auth';
 
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getUserById = async (req: IRequest, res: Response): Promise<void> => {
 	try {
-		// #swagger.tags = ['Users']
-		const users: IUser[] = await User.find();
-		res.status(200).json(users);
-	} catch (error: any) {
-		res.status(500).json({ message: error.message });
-	}
-};
-
-const getUserById = async (req: Request, res: Response): Promise<void> => {
-	try {
-		// #swagger.tags = ['Users']
-		if (!isValidObjectId(req.params.id)) {
-			res.status(400).json({ message: 'Invalid ID' });
-			return;
-		}
-		const user: IUser | null = await User.findById(req.params.id);
+		const user: IUser | null = await User.findById(req.id);
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
 			return;
 		}
-		res.status(200).json(user);
+		const showUser: Pick<IUser, 'id' | 'username' | 'email'> = {
+			id: user.id,
+			username: user.username,
+			email: user.email,
+		};
+		res.status(200).json(showUser);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
 };
 
 const createUser = async (req: Request, res: Response): Promise<void> => {
-	// #swagger.tags = ['Register']
 	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
@@ -60,6 +49,10 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 			role: UserRole.USER,
 		};
 		const user: IUser = await User.create(newUser);
+		if (!user) {
+			res.status(500).json({ message: 'Could not add user' });
+			return;
+		}
 		const showUser: Pick<IUser, 'username' | 'email'> = {
 			username: user.username,
 			email: user.email,
@@ -70,24 +63,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 	}
 };
 
-const updateUser = async (req: Request, res: Response): Promise<void> => {
-	// #swagger.tags = ['Users']
-	try {
-		const user: IUser | null = await User.findByIdAndUpdate(
-			req.params.id,
-			req.body,
-			{
-				new: true,
-			}
-		);
-		res.status(200).json(user);
-	} catch (error: any) {
-		res.status(500).json({ message: error.message });
-	}
-};
-
 const authUser = async (req: Request, res: Response): Promise<void> => {
-	// #swagger.tags = ['Auth']
 	const reqBody: Partial<IUser> = req.body;
 	if (!reqBody.username || !reqBody.email || !reqBody.password) {
 		res.status(400).json({ message: 'Missing required fields' });
@@ -140,7 +116,6 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
-	// #swagger.tags = ['Refresh']
 	const cookies = req.cookies;
 	if (!cookies?.jwt) {
 		res.status(401).json({ message: 'No token supplied' });
@@ -186,7 +161,6 @@ const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
 
 const logoutUser = async (req: Request, res: Response): Promise<void> => {
 	// On client, delete the accessToken
-	// #swagger.tags = ['Logout']
 	const cookies = req.cookies;
 	if (!cookies?.jwt) {
 		res.status(204).json({ message: 'No content' });
@@ -208,6 +182,13 @@ const logoutUser = async (req: Request, res: Response): Promise<void> => {
 		const updatedUser = await User.findByIdAndUpdate(user.id, {
 			refreshToken: '',
 		});
+
+		if (!updatedUser) {
+			res
+				.status(500)
+				.json({ message: 'An unexpected error occurred on the server.' });
+			return;
+		}
 		res.clearCookie('jwt', { httpOnly: true }); // secure: true on https
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -215,7 +196,6 @@ const logoutUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 export default {
-	getAllUsers,
 	getUserById,
 	createUser,
 	authUser,

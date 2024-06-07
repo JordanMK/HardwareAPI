@@ -5,8 +5,6 @@ import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
 
 const getComputers = async (req: Request, res: Response): Promise<void> => {
-	const query: Partial<IComputer> =
-		Object.values(req.query).length > 0 ? req.query : req.body;
 	try {
 		const computers: IComputer[] = await Computer.find()
 			.populate('cpu')

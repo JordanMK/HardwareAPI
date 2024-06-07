@@ -1,16 +1,11 @@
 import { Request, Response } from 'express';
 import RAM from '../../models/components/RAM';
 import { IRAMComponent } from '../../types/models';
-import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
-import getComponentById from './componentsController';
-import { transformDotNotation } from '../queryController';
 
 const getRAMComponents = async (req: Request, res: Response): Promise<void> => {
-	const query: Partial<IRAMComponent> =
-		Object.values(req.query).length > 0 ? req.query : req.body;
 	try {
-		const ramComponents: IRAMComponent[] = await RAM.find(query);
+		const ramComponents: IRAMComponent[] = await RAM.find(req.query);
 		res.status(200).json(ramComponents);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -22,7 +17,6 @@ const getRAMComponentById = async (
 	res: Response
 ): Promise<void> => {
 	if (Object.values(req.query).length > 0) {
-		console.log(Object.values(req.query));
 		res.status(400).json({
 			message: 'This route does not allow additional query parameters',
 		});

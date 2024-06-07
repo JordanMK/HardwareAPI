@@ -5,7 +5,7 @@ import jwt, {
 	TokenExpiredError,
 } from 'jsonwebtoken';
 
-interface IRequest extends Request {
+export interface IRequest extends Request {
 	id?: string;
 	role?: string;
 }

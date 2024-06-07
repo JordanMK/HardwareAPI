@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import Component from '../../models/components/Component';
 import { ComponentType, IComponent } from '../../types/models';
 import { isValidObjectId } from 'mongoose';
-import Joi from 'joi';
-import { transformDotNotation } from '../queryController';
 
 const getComponentTypes = (req: Request, res: Response) => {
 	res.status(200).json(Object.values(ComponentType));
@@ -19,12 +17,12 @@ const getComponents = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getComponentById = async (req: Request, res: Response): Promise<void> => {
-		if (Object.values(req.query).length > 0) {
-			res.status(400).json({
-				message: 'This route does not allow additional query parameters',
-			});
-			return;
-		}
+	if (Object.values(req.query).length > 0) {
+		res.status(400).json({
+			message: 'This route does not allow additional query parameters',
+		});
+		return;
+	}
 	if (!isValidObjectId(req.params.id)) {
 		res.status(400).json({ message: 'Invalid ID' });
 		return;

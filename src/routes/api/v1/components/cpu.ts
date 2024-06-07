@@ -10,7 +10,7 @@ const router = express.Router();
 router
 	.route('/:id')
 	.get(CPUController.getCPUComponentById)
-	.patch(
+	.put(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
 		validator('cpuUpdateSchema', 'body'),

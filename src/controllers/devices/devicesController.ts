@@ -2,23 +2,14 @@ import { Request, Response } from 'express';
 import Device from '../../models/devices/Device';
 import { DeviceType, IDevice } from '../../types/models';
 import { isValidObjectId } from 'mongoose';
-import Joi from 'joi';
-import { transformDotNotation } from '../queryController';
 
 const getDeviceTypes = (req: Request, res: Response) => {
 	res.status(200).json(Object.values(DeviceType));
 };
 
 const getDevices = async (req: Request, res: Response): Promise<void> => {
-	const query: Partial<IDevice> = req.query;
-	const tranformedQuery = transformDotNotation(query);
-	const { error } = validateDeviceQuery(tranformedQuery);
-	if (error) {
-		res.status(400).json({ message: 'Invalid query' });
-		return;
-	}
 	try {
-		const devices: IDevice[] = await Device.find(query)
+		const devices: IDevice[] = await Device.find(req.query)
 			.populate('cpu')
 			.populate('gpu')
 			.populate('ram');
@@ -62,17 +53,6 @@ const deleteDevice = async (req: Request, res: Response): Promise<void> => {
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
-};
-
-const validateDeviceQuery = (query: Partial<IDevice>) => {
-	const schema = Joi.object<IDevice>({
-		id: Joi.string(),
-		brand: Joi.string(),
-		name: Joi.string(),
-		deviceType: Joi.string(),
-		images: Joi.array().items(Joi.string()).single(),
-	});
-	return schema.validate(query);
 };
 
 export default {

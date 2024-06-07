@@ -10,7 +10,7 @@ const router = express.Router();
 router
 	.route('/:id')
 	.get(RAMController.getRAMComponentById)
-	.patch(
+	.put(
 		auth,
 		verifyRole(UserRole.ADMIN, UserRole.USER),
 		validator('ramUpdateSchema', 'body'),
