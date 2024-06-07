@@ -2,8 +2,8 @@ import express from 'express';
 import auth from '../../../../middleware/auth';
 import verifyRole from '../../../../middleware/verifyRole';
 import { UserRole } from '../../../../types/models';
-import computerController from '../../../../controllers/devices/computerController';
 import validator from '../../../../middleware/validator';
+import computerController from '../../../../controllers/devices/computerController';
 
 const router = express.Router();
 
