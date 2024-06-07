@@ -1,7 +1,10 @@
 import express, { Express, Request, Response } from 'express';
 import userController from '../../controllers/userController';
+import validator from '../../middleware/validator';
 const router = express.Router();
 
-router.route('/').post(userController.createUser);
+router
+	.route('/')
+	.post(validator('userSchema', 'body'), userController.createUser);
 
 export const register = router;

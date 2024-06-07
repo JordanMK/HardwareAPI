@@ -46,7 +46,7 @@ const createGPUComponent = async (
 	try {
 		const nameRegex = new RegExp(req.body.name as string, 'i');
 		const duplicate = await GPU.find({ name: nameRegex });
-		if (duplicate) {
+		if (duplicate.length > 0) {
 			res.status(409).json({ message: 'This component already exists' });
 			return;
 		}

@@ -10,13 +10,14 @@ const router = express.Router();
 
 router
 	.route('/:id')
-	// 	.get(RAMController.getRAMComponentById)
-	// 	.patch(
-	// 		auth,
-	// 		verifyRole(UserRole.ADMIN, UserRole.USER),
-	// 		RAMController.updateRAMComponent
-	// 	)
-	.delete(auth, verifyRole(UserRole.ADMIN), RAMController.deleteRAMComponent);
+	.get(ComputerController.getComputerById)
+	.put(
+		auth,
+		verifyRole(UserRole.ADMIN, UserRole.USER),
+		validator('computerUpdateSchema', 'body'),
+		ComputerController.updateComputer
+	)
+	.delete(auth, verifyRole(UserRole.ADMIN), ComputerController.deleteComputer);
 
 router
 	.route('/')

@@ -12,7 +12,7 @@ const Computer = new Schema<IComputer>({
 	name: { type: String, required: true },
 	computerType: {
 		type: String,
-		enum: Object.values(ComponentType),
+		enum: ComputerType,
 		required: true,
 	},
 	images: { type: [String] },

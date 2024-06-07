@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { DeviceType, IComputer } from '../../types/models';
+import { ComputerType, DeviceType, IComputer } from '../../types/models';
 import deviceValidator from './device.validator';
 import cpuValidator from '../components/cpu.validator';
 import gpuValidator from '../components/gpu.validator';
@@ -9,14 +9,11 @@ import makeOptional from '../makeOptional';
 
 const computerCreateSchema = Joi.object<IComputer>({
 	computerType: Joi.string()
-		.allow(...Object.values(DeviceType))
+		.allow(...Object.values(ComputerType))
 		.required(),
-	// cpu: Joi.allow(Joi.string(), cpuValidator.cpuCreateSchema).required(),
-	// gpu: Joi.allow(Joi.string(), gpuValidator.gpuCreateSchema),
-	// ram: Joi.allow(Joi.string(), ramValidator.ramCreateSchema).required(),
-	cpu: Joi.string().external(isValidObjectId).required(),
-	gpu: Joi.string().external(isValidObjectId),
-	ram: Joi.string().external(isValidObjectId).required(),
+	cpu: Joi.string().required(),
+	gpu: Joi.string(),
+	ram: Joi.string().required(),
 	ramModules: Joi.number().required(),
 	ramCapacity: Joi.number().required(),
 }).concat(deviceValidator.deviceCreateSchema as Joi.ObjectSchema);

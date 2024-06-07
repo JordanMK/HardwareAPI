@@ -12,10 +12,10 @@ const getUserById = async (req: IRequest, res: Response): Promise<void> => {
 			res.status(404).json({ message: 'User not found' });
 			return;
 		}
-		const showUser: Pick<IUser, 'id' | 'username' | 'email'> = {
-			id: user.id,
+		const showUser: Pick<IUser, 'username' | 'email' | 'role'> = {
 			username: user.username,
 			email: user.email,
+			role: user.role,
 		};
 		res.status(200).json(showUser);
 	} catch (error: any) {
@@ -24,11 +24,7 @@ const getUserById = async (req: IRequest, res: Response): Promise<void> => {
 };
 
 const createUser = async (req: Request, res: Response): Promise<void> => {
-	const reqBody: Partial<IUser> = req.body;
-	if (!reqBody.username || !reqBody.email || !reqBody.password) {
-		res.status(400).json({ message: 'Missing required fields' });
-		return;
-	}
+	const reqBody: Pick<IUser, 'username' | 'email' | 'password'> = req.body;
 	try {
 		const duplicate: IUser | null =
 			(await User.findOne({
@@ -53,9 +49,10 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 			res.status(500).json({ message: 'Could not add user' });
 			return;
 		}
-		const showUser: Pick<IUser, 'username' | 'email'> = {
+		const showUser: Pick<IUser, 'username' | 'email' | 'role'> = {
 			username: user.username,
 			email: user.email,
+			role: user.role,
 		};
 		res.status(201).json(showUser);
 	} catch (error: any) {
@@ -64,11 +61,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const authUser = async (req: Request, res: Response): Promise<void> => {
-	const reqBody: Partial<IUser> = req.body;
-	if (!reqBody.username || !reqBody.email || !reqBody.password) {
-		res.status(400).json({ message: 'Missing required fields' });
-		return;
-	}
+	const reqBody: Pick<IUser, 'username' | 'email' | 'password'> = req.body;
 	try {
 		const user = await User.findOne({
 			username: reqBody.username,
@@ -101,7 +94,11 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 				.json({ message: 'An unexpected error occurred on the server.' });
 			return;
 		}
-
+		const showUser: Pick<IUser, 'username' | 'email' | 'role'> = {
+			username: user.username,
+			email: user.email,
+			role: user.role,
+		};
 		res
 			.status(200)
 			.header('x-auth-token', accesToken)
@@ -109,7 +106,7 @@ const authUser = async (req: Request, res: Response): Promise<void> => {
 				httpOnly: true,
 				maxAge: 24 * 60 * 60 * 1000,
 			})
-			.json({ success: `User ${user.username} is logged in!` });
+			.json(showUser);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}
@@ -147,7 +144,6 @@ const refreshAuthUser = async (req: Request, res: Response): Promise<void> => {
 					}
 				}
 				const accesToken = user.generateAccessToken();
-				console.log('Success');
 				res
 					.status(200)
 					.header('x-auth-token', accesToken)
@@ -163,19 +159,18 @@ const logoutUser = async (req: Request, res: Response): Promise<void> => {
 	// On client, delete the accessToken
 	const cookies = req.cookies;
 	if (!cookies?.jwt) {
-		res.status(204).json({ message: 'No content' });
+		res.status(404).json({ message: 'No token supplied' });
 		return;
 	}
 
 	try {
 		const refreshToken = cookies.jwt;
-		const user = await User.findOne({
+		const user: IUser | null = await User.findOne({
 			refreshToken: refreshToken,
 		});
 
 		if (!user) {
-			res.clearCookie('jwt', { httpOnly: true });
-			res.status(204).json({ message: `No content` });
+			res.status(404).json({ message: 'User not found' });
 			return;
 		}
 
@@ -189,7 +184,10 @@ const logoutUser = async (req: Request, res: Response): Promise<void> => {
 				.json({ message: 'An unexpected error occurred on the server.' });
 			return;
 		}
-		res.clearCookie('jwt', { httpOnly: true }); // secure: true on https
+		res
+			.clearCookie('jwt', { httpOnly: true })
+			.status(200)
+			.json({ message: user.username + ' has successfully logged out.' }); // secure: true on https
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
 	}

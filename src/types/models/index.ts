@@ -121,7 +121,7 @@ export interface IDevice {
 }
 
 export enum DeviceType {
-	COMPUTER = 'Computer',
+	COMPUTER = 'COMPUTER',
 }
 
 export interface IComputer {
@@ -138,8 +138,8 @@ export interface IComputer {
 }
 
 export enum ComputerType {
-	DESKTOP = 'Desktop',
-	LAPTOP = 'Laptop',
+	DESKTOP = 'DESKTOP',
+	LAPTOP = 'LAPTOP',
 }
 
 interface IComputerRAMComponents extends IRAMComponent {
@@ -154,6 +154,6 @@ export enum ComponentType {
 }
 
 export enum UserRole {
-	ADMIN = 'admin',
-	USER = 'user',
+	ADMIN = 'ADMIN',
+	USER = 'USER',
 }

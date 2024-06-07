@@ -5,6 +5,7 @@ import gpuValidator from './components/gpu.validator';
 import ramValidator from './components/ram.validator';
 import computerValidator from './devices/computer.validator';
 import deviceValidator from './devices/device.validator';
+import userValidator from './users/user.validator';
 
 export default {
 	componentValidator,
@@ -13,4 +14,5 @@ export default {
 	ramValidator,
 	deviceValidator,
 	computerValidator,
+	userValidator,
 };
